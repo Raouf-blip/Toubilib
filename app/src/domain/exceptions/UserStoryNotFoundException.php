@@ -1,6 +1,6 @@
 <?php
 
-namespace jira\domain; 
+namespace jira\domain\exceptions;
 	
 class UserStoryNotFoundException extends \Exception {
 

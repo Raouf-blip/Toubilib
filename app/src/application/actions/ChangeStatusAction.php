@@ -2,17 +2,16 @@
 
 namespace jira\application\actions;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Slim\Exception\HttpNotFoundException;
-use Slim\Exception\HttpBadRequestException;
-use Slim\Routing\RouteContext;
-
-use jira\domain\ports\driving\UserStoryServiceInterface;
 use jira\application\ChangeStatusDTO;
 use jira\domain\entities\UserStoryStatus;
-use jira\domain\StatusChangeNotAllowedException;
-use jira\domain\UserStoryNotFoundException;
+use jira\domain\exceptions\StatusChangeNotAllowedException;
+use jira\domain\exceptions\UserStoryNotFoundException;
+use jira\domain\ports\driving\UserStoryServiceInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpBadRequestException;
+use Slim\Exception\HttpNotFoundException;
+use Slim\Routing\RouteContext;
 
 class ChangeStatusAction extends AbstractAction {
     

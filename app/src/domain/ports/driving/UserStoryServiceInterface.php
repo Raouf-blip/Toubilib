@@ -2,10 +2,10 @@
 
 namespace jira\domain\ports\driving;
 
-use jira\domain\StatusChangeNotAllowedException;
-use jira\domain\UserStoryNotFoundException;
-use jira\domain\entities\UserStoryStatus;
 use jira\domain\entities\UserStory;
+use jira\domain\entities\UserStoryStatus;
+use jira\domain\exceptions\StatusChangeNotAllowedException;
+use jira\domain\exceptions\UserStoryNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 interface UserStoryServiceInterface {

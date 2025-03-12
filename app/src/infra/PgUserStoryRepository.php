@@ -2,10 +2,10 @@
 
 namespace jira\infra;
 
+use jira\domain\entities\Owner;
 use jira\domain\entities\UserStory;
 use jira\domain\entities\UserStoryStatus;
-use jira\domain\entities\Owner;
-use jira\domain\UserStoryNotFoundException;
+use jira\domain\exceptions\UserStoryNotFoundException;
 use jira\domain\ports\driven\UserStoryRepository;
 use Ramsey\Uuid\Uuid;
 

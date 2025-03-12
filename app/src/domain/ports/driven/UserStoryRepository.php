@@ -3,8 +3,7 @@
 namespace jira\domain\ports\driven;
 
 use jira\domain\entities\UserStory;
-use jira\domain\entities\UserStoryStatus;
-use jira\domain\UserStoryNotFoundException;
+use jira\domain\exceptions\UserStoryNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 interface UserStoryRepository {
