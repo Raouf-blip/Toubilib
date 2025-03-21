@@ -3,7 +3,7 @@
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 
-use jira\application\middlewares\ErrorMiddleware;
+use jira\presentation\middlewares\Cors;
 
 $builder = new ContainerBuilder();
 $builder->addDefinitions(__DIR__ . '/settings.php' );
@@ -12,7 +12,7 @@ $c=$builder->build();
 $app = AppFactory::createFromContainer($c);
 
 $app->addBodyParsingMiddleware();
-$app->add(\jira\application\middlewares\Cors::class);
+$app->add(Cors::class);
 $app->addRoutingMiddleware();
 
 $errorMiddleware = $app->addErrorMiddleware($c->get('displayErrorDetails'), false, false);

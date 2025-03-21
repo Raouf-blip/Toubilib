@@ -1,11 +1,11 @@
 <?php
 
 use Psr\Container\ContainerInterface;
-use jira\application\actions\GetAllUserStoriesAction;
-use jira\domain\ports\driven\UserStoryRepository;
-use jira\domain\ports\driving\UserStoryServiceInterface;
-use jira\domain\usecases\UserStoryService;
-use jira\infra\PgUserStoryRepository;
+use jira\presentation\actions\GetAllUserStoriesAction;
+use jira\application_core\application\ports\spi\UserStoryRepository;
+use jira\application_core\application\ports\api\UserStoryServiceInterface;
+use jira\application_core\application\usecases\UserStoryService;
+use jira\infra\repositories\PgUserStoryRepository;
 
 return [
 

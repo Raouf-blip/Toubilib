@@ -1,6 +1,6 @@
 <?php
 
-namespace jira\domain\entities;
+namespace jira\application_core\domain\entities;
 
 use Ramsey\Uuid\Uuid;
 

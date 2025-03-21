@@ -1,8 +1,8 @@
 <?php
 
-namespace jira\domain\entities;
+namespace jira\application_core\domain\entities;
 
-use jira\domain\exceptions\StatusChangeNotAllowedException;
+use jira\application_core\domain\exceptions\StatusChangeNotAllowedException;
 use Ramsey\Uuid\Uuid;
 
 class UserStory {

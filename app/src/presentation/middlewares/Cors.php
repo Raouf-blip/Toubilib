@@ -1,6 +1,6 @@
 <?php
 
-namespace jira\application\middlewares;
+namespace jira\presentation\middlewares;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

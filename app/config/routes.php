@@ -6,10 +6,10 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 return function( \Slim\App $app):\Slim\App {
 
-    $app->get('/user-stories', \jira\application\actions\GetAllUserStoriesAction::class)
+    $app->get('/user-stories', \jira\presentation\actions\GetAllUserStoriesAction::class)
         ->setName('user-stories-list');
 
-    $app->post('/user-stories/{id}/change-status', \jira\application\actions\ChangeStatusAction::class)
+    $app->post('/user-stories/{id}/change-status', \jira\presentation\actions\ChangeStatusAction::class)
         ->setName('user-stories-change-status');
         
     /**

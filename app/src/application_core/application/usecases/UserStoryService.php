@@ -1,13 +1,13 @@
 <?php
 
-namespace jira\domain\usecases;
+namespace jira\application_core\application\usecases;
 
-use jira\domain\entities\UserStory;
-use jira\domain\entities\UserStoryStatus;
-use jira\domain\exceptions\StatusChangeNotAllowedException;
-use jira\domain\exceptions\UserStoryNotFoundException;
-use jira\domain\ports\driven\UserStoryRepository;
-use jira\domain\ports\driving\UserStoryServiceInterface;
+use jira\application_core\domain\entities\UserStory;
+use jira\application_core\domain\entities\UserStoryStatus;
+use jira\application_core\domain\exceptions\StatusChangeNotAllowedException;
+use jira\application_core\domain\exceptions\UserStoryNotFoundException;
+use jira\application_core\application\ports\spi\UserStoryRepository;
+use jira\application_core\application\ports\api\UserStoryServiceInterface;
 use Ramsey\Uuid\Uuid;
 
 class UserStoryService implements UserStoryServiceInterface {

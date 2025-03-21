@@ -1,9 +1,9 @@
 <?php
 
 use function PHPUnit\Framework\assertEquals;
-use jira\domain\entities\UserStory;
-use jira\domain\entities\UserStoryStatus;
-use jira\domain\StatusChangeNotAllowedException;
+use jira\application_core\domain\entities\UserStory;
+use jira\application_core\domain\entities\UserStoryStatus;
+use jira\application_core\domain\exceptions\StatusChangeNotAllowedException;
 
 it("should create a user story with status TODO", function() {
     $uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();

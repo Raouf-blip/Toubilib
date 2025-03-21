@@ -1,9 +1,9 @@
 <?php
 
-namespace jira\domain\ports\driven;
+namespace jira\application_core\application\ports\spi;
 
-use jira\domain\entities\UserStory;
-use jira\domain\exceptions\UserStoryNotFoundException;
+use jira\application_core\domain\entities\UserStory;
+use jira\application_core\domain\exceptions\UserStoryNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 interface UserStoryRepository {
