@@ -1,11 +1,11 @@
 <?php
 
-namespace jira\application_core\application\ports\api;
+namespace jira\core\application\ports\api;
 
-use jira\application_core\domain\entities\UserStory;
-use jira\application_core\domain\entities\UserStoryStatus;
-use jira\application_core\domain\exceptions\StatusChangeNotAllowedException;
-use jira\application_core\domain\exceptions\UserStoryNotFoundException;
+use jira\core\domain\entities\UserStory;
+use jira\core\domain\entities\UserStoryStatus;
+use jira\core\domain\exceptions\StatusChangeNotAllowedException;
+use jira\core\application\exceptions\UserStoryNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 interface UserStoryServiceInterface {

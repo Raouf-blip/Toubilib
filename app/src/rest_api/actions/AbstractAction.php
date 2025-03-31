@@ -1,6 +1,6 @@
 <?php
 
-namespace jira\presentation\actions;
+namespace jira\api\actions;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace jira\application_core\domain\entities;
+namespace jira\core\domain\entities;
 
 
 enum UserStoryStatus: string {

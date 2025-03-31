@@ -21,7 +21,7 @@ services:
       - jirahexa.net
     depends_on:
       - jira.db
-    command: php -S 0.0.0.0:80 -t /var/php/public
+    command: sh -c "composer install && php -S 0.0.0.0:80 -t /var/php/public"
 
   #
   # service db : base de données postgresql
@@ -46,13 +46,13 @@ services:
 
   #
   # composer
-  composer:
-    image: composer:2.8.6
-    command: ["composer", "install"]
-    networks:
-      - jirahexa.net
-    volumes:
-      - ./app:/app
-    depends_on:
-      - api.jirahexa
+#  composer:
+#    image: composer:2.8.6
+#    command: ["composer", "install"]
+#    networks:
+#      - jirahexa.net
+#    volumes:
+#      - ./app:/app
+#    depends_on:
+#      - api.jirahexa
 

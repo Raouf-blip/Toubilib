@@ -20,7 +20,10 @@
   },
   "autoload": {
     "psr-4" : {
-      "jira\\" : "./src"
+      "jira\\api\\" : "./src/rest_api",
+        "jira\\core\\" : "./src/application_core",
+        "jira\\infra\\" : "./src/infrastructure",
+        "jira\\tests\\" : "./tests"
     }
   },
   "config": {

@@ -1,8 +1,8 @@
 <?php
 
-namespace jira\application_core\application\ports\api\dtos;
+namespace jira\core\application\ports\api\dtos;
 
-use jira\application_core\domain\entities\UserStoryStatus;
+use jira\core\domain\entities\UserStoryStatus;
 
 class ChangeStatusDTO {
 

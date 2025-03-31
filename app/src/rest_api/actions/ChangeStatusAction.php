@@ -1,12 +1,12 @@
 <?php
 
-namespace jira\presentation\actions;
+namespace jira\api\actions;
 
-use jira\application_core\application\ports\api\dtos\ChangeStatusDTO;
-use jira\application_core\domain\entities\UserStoryStatus;
-use jira\application_core\domain\exceptions\StatusChangeNotAllowedException;
-use jira\application_core\domain\exceptions\UserStoryNotFoundException;
-use jira\application_core\application\ports\api\UserStoryServiceInterface;
+use jira\core\application\ports\api\dtos\ChangeStatusDTO;
+use jira\core\application\ports\api\UserStoryServiceInterface;
+use jira\core\domain\entities\UserStoryStatus;
+use jira\core\domain\exceptions\StatusChangeNotAllowedException;
+use jira\core\application\exceptions\UserStoryNotFoundException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpBadRequestException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace jira\application_core\domain\exceptions;
+namespace jira\core\domain\exceptions;
 	
 class StatusChangeNotAllowedException extends \Exception{
 

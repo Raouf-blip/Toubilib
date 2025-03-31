@@ -2,11 +2,11 @@
 
 namespace jira\infra\repositories;
 
-use jira\application_core\domain\entities\Owner;
-use jira\application_core\domain\entities\UserStory;
-use jira\application_core\domain\entities\UserStoryStatus;
-use jira\application_core\domain\exceptions\UserStoryNotFoundException;
-use jira\application_core\application\ports\spi\UserStoryRepository;
+use jira\core\application\ports\spi\UserStoryRepository;
+use jira\core\domain\entities\Owner;
+use jira\core\domain\entities\UserStory;
+use jira\core\domain\entities\UserStoryStatus;
+use jira\core\application\exceptions\UserStoryNotFoundException;
 use Ramsey\Uuid\Uuid;
 
 class PgUserStoryRepository implements UserStoryRepository {

@@ -1,13 +1,13 @@
 <?php
 
-namespace jira\presentation\actions;
+namespace jira\api\actions;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
 
-use jira\application_core\application\ports\api\UserStoryServiceInterface;
+use jira\core\application\ports\api\UserStoryServiceInterface;
 
 class GetAllUserStoriesAction extends AbstractAction {
     

@@ -3,7 +3,7 @@
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 
-use jira\presentation\middlewares\Cors;
+use jira\api\middlewares\Cors;
 
 $builder = new ContainerBuilder();
 $builder->addDefinitions(__DIR__ . '/settings.php' );
