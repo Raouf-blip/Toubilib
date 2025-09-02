@@ -2,7 +2,7 @@
 
 namespace jira\core\domain\entities;
 
-use jira\application_core\domain\exceptions\StatusChangeNotAllowedException;
+use jira\core\domain\exceptions\StatusChangeNotAllowedException;
 use Ramsey\Uuid\Uuid;
 
 class UserStory {

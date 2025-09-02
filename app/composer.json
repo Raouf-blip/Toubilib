@@ -20,8 +20,8 @@
   },
   "autoload": {
     "psr-4" : {
-      "jira\\api\\" : "./src/rest_api",
-        "jira\\core\\" : "./src/application_core",
+      "jira\\api\\" : "./src/api",
+        "jira\\core\\" : "./src/core",
         "jira\\infra\\" : "./src/infrastructure",
         "jira\\tests\\" : "./tests"
     }
