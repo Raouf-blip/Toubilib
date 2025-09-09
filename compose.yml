@@ -30,7 +30,7 @@ services:
     networks:
       - jirahexa.net
     volumes:
-      - ./app/sql:/var/sql
+      - ./sql/:/var/sql
 
   #
   # service administration des bases sql
