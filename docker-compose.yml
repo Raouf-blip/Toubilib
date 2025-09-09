@@ -18,7 +18,7 @@ services:
       - toubilib.net
     depends_on:
       - toubiprati.db
-      - toubiauth.db
+      # - toubiauth.db
     command: sh -c "composer install && php -S 0.0.0.0:80 -t /var/php/public"
 
     # service toubiprat.db : base de données postgresql pour les praticiens
