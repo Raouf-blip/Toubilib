@@ -3,15 +3,17 @@ declare(strict_types=1);
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use toubilib\api\actions\ListPraticiensAction;
+use toubilib\api\actions\HomeAction;
 
 
 return function( \Slim\App $app):\Slim\App {
 
 
 
-    $app->get('/', HomeAction::class);
+    // $app->get('/', HomeAction::class)->setName('home');
 
-  
+    $app->get('/praticiens', ListPraticiensAction::class)->setName('list_praticiens');
 
     return $app;
 };
