@@ -32,6 +32,9 @@ services:
       - toubilib.net
     volumes:
       - ./sql/:/var/sql
+      - ./sql/toubiprat.schema.sql:/docker-entrypoint-initdb.d/1_toubiprat.schema.sql
+      - ./sql/toubiprat.data.sql:/docker-entrypoint-initdb.d/2_toubiprat.data.sql
+
 
 
   toubirdv.db:
@@ -43,6 +46,8 @@ services:
       - toubilib.net
     volumes:
       - ./sql/:/var/sql
+      - ./sql/toubirdv.schema.sql:/docker-entrypoint-initdb.d/1_toubirdv.schema.sql
+      - ./sql/toubirdv.data.sql:/docker-entrypoint-initdb.d/2_toubirdv.data.sql
 
 
   #
