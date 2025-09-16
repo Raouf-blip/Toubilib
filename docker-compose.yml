@@ -31,7 +31,7 @@ services:
     networks:
       - toubilib.net
     volumes:
-      - ./sql:/var/sql
+      - ./sql/:/var/sql
 
 
   toubirdv.db:
@@ -42,7 +42,7 @@ services:
     networks:
       - toubilib.net
     volumes:
-      - ./sql:/var/sql
+      - ./sql/:/var/sql
 
 
   #
