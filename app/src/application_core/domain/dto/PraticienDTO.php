@@ -2,7 +2,7 @@
 
 namespace toubilib\core\domain\dto;
 
-class PracticienDTO {
+class PraticienDTO {
     public string $id;
     public string $nom;
     public string $prenom;
