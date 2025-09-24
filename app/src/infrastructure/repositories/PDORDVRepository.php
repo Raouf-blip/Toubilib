@@ -3,6 +3,7 @@ namespace toubilib\infra\repositories;
 
 use toubilib\core\application\ports\RDVRepositoryInterface;
 use DateTime;
+use toubilib\core\domain\entities\RDV;
 
 class PDORDVRepository implements RDVRepositoryInterface
 {
@@ -32,7 +33,7 @@ class PDORDVRepository implements RDVRepositoryInterface
 
         $rdvs = [];
         foreach ($rows as $row) {
-            $rdvs[] = new \toubilib\core\domain\entities\RDV(
+            $rdvs[] = new RDV(
                 $row['id'],
                 $row['praticien_id'],
                 $row['patient_id'],
@@ -48,4 +49,30 @@ class PDORDVRepository implements RDVRepositoryInterface
 
         return $rdvs;
     }
+
+    public function findById(string $rdvId): ?RDV
+    {
+        $sql = "SELECT * FROM rdv WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $rdvId]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return null;
+        }
+
+        return new \toubilib\core\domain\entities\RDV(
+            $row['id'],
+            $row['praticien_id'],
+            $row['patient_id'],
+            $row['patient_email'],
+            new \DateTime($row['date_heure_debut']),
+            isset($row['date_heure_fin']) ? new \DateTime($row['date_heure_fin']) : null,
+            (int)$row['status'],
+            (int)$row['duree'],
+            isset($row['date_creation']) ? new \DateTime($row['date_creation']) : null,
+            $row['motif_visite'] ?? null
+        );
+    }
+
 }

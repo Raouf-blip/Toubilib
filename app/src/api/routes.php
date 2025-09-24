@@ -18,6 +18,7 @@ return function( \Slim\App $app):\Slim\App {
 
     $app->get('/praticiens/{id}/rdvs/occupes', ListRDVOccupesAction::class)->setName('list_rdv_occupes');
 
+    $app->get('/rdvs/{id}', \toubilib\api\actions\GetRDVAction::class);
 
     return $app;
 };

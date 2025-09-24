@@ -3,6 +3,7 @@ namespace toubilib\core\application\usecases;
 
 use toubilib\core\application\ports\RDVRepositoryInterface;
 use toubilib\core\application\dto\RDVDTO;
+use toubilib\core\domain\entities\RDV;
 use DateTime;
 
 class ServiceRDV
@@ -36,4 +37,27 @@ class ServiceRDV
 
         return $dtos;
     }
+
+    public function consulterRdv(string $rdvId): ?RDVDTO
+    {
+        $rdv = $this->rdvRepository->findById($rdvId);
+
+        if (!$rdv) {
+            return null;
+        }
+
+        return new RDVDTO(
+            $rdv->getId(),
+            $rdv->getPraticienId(),
+            $rdv->getPatientId(),
+            $rdv->getPatientEmail(),
+            $rdv->getDateHeureDebut()->format('Y-m-d H:i:s'),
+            $rdv->getDateHeureFin()?->format('Y-m-d H:i:s'),
+            $rdv->getStatus(),
+            $rdv->getDuree(),
+            $rdv->getDateCreation()?->format('Y-m-d H:i:s'),
+            $rdv->getMotifVisite()
+        );
+    }
+
 }
