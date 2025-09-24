@@ -1,6 +1,6 @@
 <?php
 
-namespace toubilib\core\application;
+namespace toubilib\core\application\ports;
 
 interface PraticienRepositoryInterface
 {

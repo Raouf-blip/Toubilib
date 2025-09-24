@@ -4,7 +4,7 @@ namespace toubilib\infra\repositories;
 
 use toubilib\core\domain\entities\praticien\Praticien;
 use toubilib\core\domain\entities\praticien\Specialite;
-use toubilib\core\application\PraticienRepositoryInterface;
+use toubilib\core\application\ports\PraticienRepositoryInterface;
 
 class PDOPraticienRepository implements PraticienRepositoryInterface
 {

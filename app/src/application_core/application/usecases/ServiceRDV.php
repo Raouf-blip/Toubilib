@@ -1,18 +1,20 @@
 <?php
-
 namespace toubilib\core\application\usecases;
 
-use toubilib\core\domain\repositories\RDVRepositoryInterface;
-use toubilib\core\domain\entities\RDV;
+use toubilib\core\application\ports\RDVRepositoryInterface;
+use DateTime;
 
 class ServiceRDV
 {
-    public function __construct(private RDVRepositoryInterface $repository) {}
+    private RDVRepositoryInterface $rdvRepository;
 
-    
-    // Liste des créneaux occupés d'un praticien dans une période donnée
-    public function listerCreneauxOccupes(string $praticienId, \DateTime $dateDebut, \DateTime $dateFin): array
+    public function __construct(RDVRepositoryInterface $rdvRepository)
     {
-        return $this->repository->findByPraticienAndPeriode($praticienId, $dateDebut, $dateFin);
+        $this->rdvRepository = $rdvRepository;
+    }
+
+    public function listerCreneauxOccupes(int $praticienId, DateTime $debut, DateTime $fin): array
+    {
+        return $this->rdvRepository->findBusySlots($praticienId, $debut, $fin);
     }
 }
