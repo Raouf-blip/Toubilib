@@ -6,5 +6,5 @@ use DateTime;
 
 interface RDVRepositoryInterface
 {
-    public function findBusySlots(int $praticienId, DateTime $debut, DateTime $fin): array;
+    public function findBusySlots(string $praticienId, DateTime $debut, DateTime $fin): array;
 }

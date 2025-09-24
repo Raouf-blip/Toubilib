@@ -16,7 +16,7 @@ class ListRDVOccupesAction
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $praticienId = (int)$args['id'];
+        $praticienId = $args['id'];
         $params = $request->getQueryParams();
         $debut = new \DateTime($params['dateDebut']);
         $fin = new \DateTime($params['dateFin']);
