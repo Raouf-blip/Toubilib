@@ -2,6 +2,7 @@
 
 use Psr\Container\ContainerInterface;
 use toubilib\api\actions\ListPraticiensAction;
+use toubilib\api\actions\RecherchePraticiensAction;
 use toubilib\core\application\usecases\ServicePraticienInterface;
 use toubilib\api\actions\ListRDVOccupesAction;
 use toubilib\core\application\usecases\ServiceRDV;
@@ -11,6 +12,11 @@ return [
     // une factory pour instancier la classe ListerPraticiensAction
     ListPraticiensAction::class => function (ContainerInterface $c) {
         return new ListPraticiensAction($c->get(ServicePraticienInterface::class));
+    },
+
+    // Consulter un praticien par ID
+    RecherchePraticiensAction::class => function (ContainerInterface $c) {
+        return new RecherchePraticiensAction($c->get(ServicePraticienInterface::class));
     },
 
     // liste des rdv occupés

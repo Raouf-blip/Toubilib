@@ -23,4 +23,14 @@ class ServicePraticien implements ServicePraticienInterface
         }
         return $praticienDTOs;
     }
+
+    public function RecherchePraticienByID(string $id): ?PraticienDTO
+    {
+        $praticien = $this->praticienRepository->findById($id);
+
+        if ($praticien === null) {
+            return null;
+        }
+        return new PraticienDTO($praticien);
+    }
 }

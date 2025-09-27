@@ -21,4 +21,34 @@ class Praticien
         $this->specialite = $specialite;
     }
 
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getNom(): string
+    {
+        return $this->nom;
+    }
+
+    public function getPrenom(): string
+    {
+        return $this->prenom;
+    }
+
+    public function getVille(): string
+    {
+        return $this->ville;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function getSpecialite(): Specialite
+    {
+        return $this->specialite;
+    }
+
 }
