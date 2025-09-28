@@ -131,5 +131,29 @@ class ServiceRDV implements ServiceRDVInterface
         $this->rdvRepository->updateStatus($rdv->getId(), $rdv->getStatus());
     }
 
+    public function getAgendaPraticien(string $praticienId, ?\DateTime $dateDebut = null, ?\DateTime $dateFin = null): array
+    {
+        $dateDebut = $dateDebut ?? new \DateTime(); // par défaut aujourd'hui
+        $dateFin = $dateFin ?? clone $dateDebut;
+
+        $rdvs = $this->rdvRepository->findBusySlots($praticienId, $dateDebut, $dateFin);
+
+        $agenda = [];
+        foreach ($rdvs as $rdv) {
+            $agenda[] = [
+                'id' => $rdv->getId(),
+                'patientId' => $rdv->getPatientId(),
+                'patientLink' => "/patients/{$rdv->getPatientId()}", // lien vers le patient
+                'dateHeureDebut' => $rdv->getDateHeureDebut()->format('Y-m-d H:i:s'),
+                'dateHeureFin' => $rdv->getDateHeureFin()?->format('Y-m-d H:i:s'),
+                'duree' => $rdv->getDuree(),
+                'motifVisite' => $rdv->getMotifVisite(),
+                'status' => $rdv->getStatus(),
+            ];
+        }
+
+        return $agenda;
+    }
+
 
 }

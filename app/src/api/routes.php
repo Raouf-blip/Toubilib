@@ -11,6 +11,7 @@ use toubilib\api\actions\HomeAction;
 use toubilib\api\actions\CreateRDVAction;
 use toubilib\api\middlewares\RDVInputDataValidationMiddleware;
 use toubilib\api\actions\AnnulerRDVAction;
+use toubilib\api\actions\GetPatientAction;
 
 
 
@@ -33,6 +34,9 @@ return function( \Slim\App $app):\Slim\App {
         ->setName('create_rdv');
     
     $app->delete('/rdvs/{id}', AnnulerRDVAction::class);
+    $app->get('/praticiens/{id}/agenda', \toubilib\api\actions\AgendaPraticienAction::class);
+    $app->get('/patients/{id}', GetPatientAction::class);
+
 
 
     return $app;

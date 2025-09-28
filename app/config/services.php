@@ -13,6 +13,7 @@ use toubilib\core\application\ports\PatientRepositoryInterface;
 use toubilib\infra\repositories\PDOPatientRepository;
 use toubilib\core\application\usecases\ServicePatient;
 use toubilib\api\actions\AnnulerRDVAction;
+use toubilib\core\application\usecases\ServicePatientInterface;
 
 return [
 
@@ -65,6 +66,9 @@ return [
         fn(ContainerInterface $c) => new ServicePraticien($c->get(PraticienRepositoryInterface::class)),
 
     ServicePatient::class =>
+        fn(ContainerInterface $c) => new ServicePatient($c->get(PatientRepositoryInterface::class)),
+    
+    ServicePatientInterface::class =>
         fn(ContainerInterface $c) => new ServicePatient($c->get(PatientRepositoryInterface::class)),
 
     ServiceRDVInterface::class =>

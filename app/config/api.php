@@ -1,6 +1,7 @@
 <?php
 
 use Psr\Container\ContainerInterface;
+use toubilib\api\actions\AgendaPraticienAction;
 use toubilib\api\actions\ListPraticiensAction;
 use toubilib\api\actions\RecherchePraticiensAction;
 use toubilib\core\application\usecases\ServicePraticienInterface;
@@ -9,9 +10,12 @@ use toubilib\core\application\usecases\ServiceRDVInterface;
 use toubilib\core\application\usecases\ServiceRDV;
 use toubilib\api\actions\GetRDVAction;
 use toubilib\api\actions\CreateRDVAction;
+use toubilib\api\actions\GetPatientAction;
 use toubilib\core\application\ports\RDVRepositoryInterface;
 use toubilib\infra\repositories\PDORDVRepository;
 use toubilib\core\application\usecases\ServicePatient;
+use toubilib\core\application\usecases\ServicePatientInterface;
+
 return [
 
     // Définition de PDO pour RDV
@@ -55,4 +59,11 @@ return [
 
     RecherchePraticiensAction::class => fn(ContainerInterface $c) =>
         new RecherchePraticiensAction($c->get(ServicePraticienInterface::class)),
+    
+    AgendaPraticienAction::class => fn(ContainerInterface $c) =>
+        new AgendaPraticienAction($c->get(ServiceRDVInterface::class)),
+
+    // Actions patients
+    GetPatientAction::class => fn(ContainerInterface $c) =>
+        new GetPatientAction($c->get(ServicePatientInterface::class)),
 ];
