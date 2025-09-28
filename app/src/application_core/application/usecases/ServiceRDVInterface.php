@@ -10,4 +10,6 @@ interface ServiceRDVInterface
     public function consulterRdv(string $rdvId): ?RDVDTO;
     
     public function creerRendezVous(InputRDVDTO $dto): RDV;
+    public function annulerRendezVous(string $rdvId): void;
+
 }

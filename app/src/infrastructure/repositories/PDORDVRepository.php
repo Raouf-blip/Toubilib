@@ -89,4 +89,15 @@ class PDORDVRepository implements RDVRepositoryInterface
             'motif' => $rdv->getMotifVisite()
         ]);
     }
+
+    public function updateStatus(string $rdvId, int $status): void
+    {
+        $sql = "UPDATE rdv SET status = :status WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'id' => $rdvId,
+            'status' => $status
+        ]);
+    }
+
 }

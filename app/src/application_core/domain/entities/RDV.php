@@ -1,6 +1,8 @@
 <?php
 
 namespace toubilib\core\domain\entities;
+use DateTime;
+use Exception;
 
 class RDV
 {
@@ -27,4 +29,19 @@ class RDV
     public function getDuree(): int { return $this->duree; }
     public function getDateCreation(): ?\DateTime { return $this->dateCreation; }
     public function getMotifVisite(): ?string { return $this->motifVisite; }
+
+    public function annuler(): void
+    {
+        $now = new DateTime();
+
+        if ($this->status === 1) {
+            throw new Exception("Rendez-vous déjà annulé");
+        }
+
+        if ($this->dateHeureDebut < $now) {
+            throw new Exception("Impossible d'annuler un rendez-vous passé");
+        }
+
+        $this->status = 1;
+    }
 }

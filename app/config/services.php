@@ -12,6 +12,7 @@ use toubilib\core\application\usecases\ServiceRDVInterface;
 use toubilib\core\application\ports\PatientRepositoryInterface;
 use toubilib\infra\repositories\PDOPatientRepository;
 use toubilib\core\application\usecases\ServicePatient;
+use toubilib\api\actions\AnnulerRDVAction;
 
 return [
 
@@ -75,4 +76,8 @@ return [
 
     // pour éviter d'injecter direct l'implémentation
     ServiceRDV::class => fn(ContainerInterface $c) => $c->get(ServiceRDVInterface::class),
+
+    AnnulerRDVAction::class => function (ContainerInterface $c) {
+        return new AnnulerRDVAction($c->get(ServiceRDVInterface::class));
+    },
 ];

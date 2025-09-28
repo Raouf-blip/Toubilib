@@ -10,6 +10,7 @@ use toubilib\api\actions\ListRDVOccupesAction;
 use toubilib\api\actions\HomeAction;
 use toubilib\api\actions\CreateRDVAction;
 use toubilib\api\middlewares\RDVInputDataValidationMiddleware;
+use toubilib\api\actions\AnnulerRDVAction;
 
 
 
@@ -30,6 +31,9 @@ return function( \Slim\App $app):\Slim\App {
     $app->post('/rdvs', CreateRDVAction::class)
         ->add(RDVInputDataValidationMiddleware::class)
         ->setName('create_rdv');
+    
+    $app->delete('/rdvs/{id}', AnnulerRDVAction::class);
+
 
     return $app;
 };

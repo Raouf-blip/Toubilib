@@ -118,4 +118,18 @@ class ServiceRDV implements ServiceRDVInterface
 
         return $rdv;
     }
+
+    public function annulerRendezVous(string $rdvId): void
+    {
+        $rdv = $this->rdvRepository->findById($rdvId);
+        if (!$rdv) {
+            throw new Exception("RDV inexistant");
+        }
+
+        $rdv->annuler(); // méthode métier sur l'entité RDV, change le status 
+
+        $this->rdvRepository->updateStatus($rdv->getId(), $rdv->getStatus());
+    }
+
+
 }
