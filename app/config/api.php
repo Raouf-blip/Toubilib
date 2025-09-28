@@ -5,25 +5,54 @@ use toubilib\api\actions\ListPraticiensAction;
 use toubilib\api\actions\RecherchePraticiensAction;
 use toubilib\core\application\usecases\ServicePraticienInterface;
 use toubilib\api\actions\ListRDVOccupesAction;
+use toubilib\core\application\usecases\ServiceRDVInterface;
 use toubilib\core\application\usecases\ServiceRDV;
 use toubilib\api\actions\GetRDVAction;
-
+use toubilib\api\actions\CreateRDVAction;
+use toubilib\core\application\ports\RDVRepositoryInterface;
+use toubilib\infra\repositories\PDORDVRepository;
+use toubilib\core\application\usecases\ServicePatient;
 return [
-    // une factory pour instancier la classe ListerPraticiensAction
-    ListPraticiensAction::class => function (ContainerInterface $c) {
-        return new ListPraticiensAction($c->get(ServicePraticienInterface::class));
+
+    // Définition de PDO pour RDV
+    'pdo.rdv' => fn() => new PDO(
+        sprintf(
+            'pgsql:host=%s;port=%s;dbname=%s',
+            $_ENV['rdv.host'],
+            $_ENV['rdv.port'] ?? 5432,
+            $_ENV['rdv.database']
+        ),
+        $_ENV['rdv.username'],
+        $_ENV['rdv.password']
+    ),
+
+    // Repository RDV
+    RDVRepositoryInterface::class => fn(ContainerInterface $c) =>
+        new PDORDVRepository($c->get('pdo.rdv')),
+
+    // Service RDV
+    ServiceRDVInterface::class => function(ContainerInterface $c) {
+        return new ServiceRDV(
+            $c->get(RDVRepositoryInterface::class),
+            $c->get(ServicePraticienInterface::class),
+            $c->get(ServicePatient::class)
+        );
     },
 
-    // Consulter un praticien par ID
-    RecherchePraticiensAction::class => function (ContainerInterface $c) {
-        return new RecherchePraticiensAction($c->get(ServicePraticienInterface::class));
-    },
+    // Actions RDV
+    ListRDVOccupesAction::class => fn(ContainerInterface $c) =>
+        new ListRDVOccupesAction($c->get(ServiceRDVInterface::class)),
 
-    // liste des rdv occupés
-    ListRDVOccupesAction::class => fn($c) =>
-        new ListRDVOccupesAction($c->get(ServiceRDV::class)),
+    GetRDVAction::class => fn(ContainerInterface $c) =>
+        new GetRDVAction($c->get(ServiceRDVInterface::class)),
 
-    // Consulter un RDV par ID
-    GetRDVAction::class => fn($c) =>
-        new GetRDVAction($c->get(ServiceRDV::class)),
+    CreateRDVAction::class => fn(ContainerInterface $c) =>
+        new CreateRDVAction($c->get(ServiceRDVInterface::class)),
+
+    // Actions praticiens
+    ListPraticiensAction::class => fn(ContainerInterface $c) =>
+        new ListPraticiensAction($c->get(ServicePraticienInterface::class)),
+
+    RecherchePraticiensAction::class => fn(ContainerInterface $c) =>
+        new RecherchePraticiensAction($c->get(ServicePraticienInterface::class)),
 ];

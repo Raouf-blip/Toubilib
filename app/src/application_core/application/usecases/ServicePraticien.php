@@ -33,4 +33,9 @@ class ServicePraticien implements ServicePraticienInterface
         }
         return new PraticienDTO($praticien);
     }
+
+    public function getMotifsVisite(string $praticienId): array
+    {
+        return $this->praticienRepository->getMotifsVisite($praticienId);
+    }
 }

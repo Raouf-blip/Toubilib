@@ -8,41 +8,71 @@ use toubilib\core\application\usecases\ServicePraticienInterface;
 use toubilib\core\application\ports\RDVRepositoryInterface;
 use toubilib\infra\repositories\PDORDVRepository;
 use toubilib\core\application\usecases\ServiceRDV;
+use toubilib\core\application\usecases\ServiceRDVInterface;
+use toubilib\core\application\ports\PatientRepositoryInterface;
+use toubilib\infra\repositories\PDOPatientRepository;
+use toubilib\core\application\usecases\ServicePatient;
 
 return [
-    'pdo.praticien' => function() {
-        $dsn = sprintf(
-            "pgsql:host=%s;port=%s;dbname=%s",
+
+    // connexions PDO
+    'pdo.praticien' => fn() => new PDO(
+        sprintf(
+            'pgsql:host=%s;port=%s;dbname=%s',
             $_ENV['prat.host'],
             $_ENV['prat.port'] ?? 5432,
             $_ENV['prat.database']
-        );
-        return new PDO($dsn, $_ENV['prat.username'], $_ENV['prat.password']);
-    },
+        ),
+        $_ENV['prat.username'],
+        $_ENV['prat.password']
+    ),
 
-    PraticienRepositoryInterface::class => function (ContainerInterface $c) {
-        return new PDOPraticienRepository($c->get('pdo.praticien'));
-    },
+    'pdo.patient' => fn() => new PDO(
+        sprintf(
+            'pgsql:host=%s;port=%s;dbname=%s',
+            $_ENV['pat.host'],
+            $_ENV['pat.port'] ?? 5432,
+            $_ENV['pat.database']
+        ),
+        $_ENV['pat.username'],
+        $_ENV['pat.password']
+    ),
 
-    ServicePraticienInterface::class => function (ContainerInterface $c) {
-        return new ServicePraticien($c->get(PraticienRepositoryInterface::class));
-    },
-    
-    'pdo.rdv' => function() {
-        $dsn = sprintf(
-            "pgsql:host=%s;port=%s;dbname=%s",
+    'pdo.rdv' => fn() => new PDO(
+        sprintf(
+            'pgsql:host=%s;port=%s;dbname=%s',
             $_ENV['rdv.host'],
             $_ENV['rdv.port'] ?? 5432,
             $_ENV['rdv.database']
-        );
-        return new PDO($dsn, $_ENV['rdv.username'], $_ENV['rdv.password']);
-    },
+        ),
+        $_ENV['rdv.username'],
+        $_ENV['rdv.password']
+    ),
 
-    RDVRepositoryInterface::class => function(ContainerInterface $c) {
-        return new PDORDVRepository($c->get('pdo.rdv'));
-    },
+    // repositories
+    PraticienRepositoryInterface::class =>
+        fn(ContainerInterface $c) => new PDOPraticienRepository($c->get('pdo.praticien')),
 
-    ServiceRDV::class => function(ContainerInterface $c) {
-        return new ServiceRDV($c->get(RDVRepositoryInterface::class));
-    },
+    PatientRepositoryInterface::class =>
+        fn(ContainerInterface $c) => new PDOPatientRepository($c->get('pdo.patient')),
+
+    RDVRepositoryInterface::class =>
+        fn(ContainerInterface $c) => new PDORDVRepository($c->get('pdo.rdv')),
+
+    // services
+    ServicePraticienInterface::class =>
+        fn(ContainerInterface $c) => new ServicePraticien($c->get(PraticienRepositoryInterface::class)),
+
+    ServicePatient::class =>
+        fn(ContainerInterface $c) => new ServicePatient($c->get(PatientRepositoryInterface::class)),
+
+    ServiceRDVInterface::class =>
+        fn(ContainerInterface $c) => new ServiceRDV(
+            $c->get(RDVRepositoryInterface::class),
+            $c->get(ServicePraticienInterface::class),
+            $c->get(ServicePatient::class)
+        ),
+
+    // pour éviter d'injecter direct l'implémentation
+    ServiceRDV::class => fn(ContainerInterface $c) => $c->get(ServiceRDVInterface::class),
 ];

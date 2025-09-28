@@ -3,28 +3,45 @@ namespace toubilib\api\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use toubilib\core\application\usecases\ServiceRDV;
+use toubilib\core\application\usecases\ServiceRDVInterface;
 
 class GetRDVAction
 {
-    private ServiceRDV $serviceRDV;
+    private ServiceRDVInterface $serviceRDV;
 
-    public function __construct(ServiceRDV $serviceRDV)
+    public function __construct(ServiceRDVInterface $serviceRDV)
     {
         $this->serviceRDV = $serviceRDV;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $rdvId = $args['id'];
-        $rdvDTO = $this->serviceRDV->consulterRdv($rdvId);
+        $rdvId = $args['id'] ?? null;
+        if (!$rdvId) {
+            $response->getBody()->write(json_encode(['error' => 'ID manquant']));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
 
-        if (!$rdvDTO) {
-            $response->getBody()->write(json_encode(['error' => 'RDV not found']));
+        $rdv = $this->serviceRDV->consulterRdv($rdvId);
+        if (!$rdv) {
+            $response->getBody()->write(json_encode(['error' => 'RDV non trouvé']));
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
-        $response->getBody()->write(json_encode($rdvDTO));
+        // accès aux propriétés publiques du DTO
+        $response->getBody()->write(json_encode([
+            'id' => $rdv->id,
+            'praticienId' => $rdv->praticienId,
+            'patientId' => $rdv->patientId,
+            'patientEmail' => $rdv->patientEmail,
+            'dateHeureDebut' => $rdv->dateHeureDebut,
+            'dateHeureFin' => $rdv->dateHeureFin,
+            'status' => $rdv->status,
+            'duree' => $rdv->duree,
+            'dateCreation' => $rdv->dateCreation,
+            'motifVisite' => $rdv->motifVisite
+        ]));
+
         return $response->withHeader('Content-Type', 'application/json');
     }
 }

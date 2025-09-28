@@ -49,6 +49,17 @@ services:
       - ./sql/toubirdv.schema.sql:/docker-entrypoint-initdb.d/1_toubirdv.schema.sql
       - ./sql/toubirdv.data.sql:/docker-entrypoint-initdb.d/2_toubirdv.data.sql
 
+  toubipatient.db:
+    image: 'postgres:latest'
+    env_file: ./toubipatientdb.env
+    ports:
+      - '5433:5432'
+    networks:
+      - toubilib.net
+    volumes:
+      - ./sql/:/var/sql
+      - ./sql/toubipat.schema.sql:/docker-entrypoint-initdb.d/1_toubipat.schema.sql
+      - ./sql/toubipat.data.sql:/docker-entrypoint-initdb.d/2_toubipat.data.sql
 
   #
   # service administration des bases sql
