@@ -14,7 +14,7 @@ class CreateRDVAction
     {
         $this->serviceRDV = $serviceRDV;
     }
-
+    //a modifier
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         $dto = $request->getAttribute('inputRdvDto');
@@ -25,7 +25,7 @@ class CreateRDVAction
         }
 
         try {
-            $rdv = $this->serviceRDV->creerRendezVous($dto);
+            $rdv = $this->serviceRDV->($dto);
 
             $out = [
                 'id' => $rdv->getId(),

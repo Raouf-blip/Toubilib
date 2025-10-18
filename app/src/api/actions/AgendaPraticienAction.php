@@ -29,6 +29,6 @@ class AgendaPraticienAction
         $agenda = $this->serviceRDV->getAgendaPraticien($praticienId, $dateDebut, $dateFin);
 
         $response->getBody()->write(json_encode($agenda));
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
 }

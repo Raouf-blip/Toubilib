@@ -19,7 +19,7 @@ return function( \Slim\App $app):\Slim\App {
 
 
 
-    // $app->get('/', HomeAction::class)->setName('home');
+    $app->get('/', HomeAction::class)->setName('home');
 
     $app->get('/praticiens', ListPraticiensAction::class)->setName('list_praticiens');
 
@@ -37,6 +37,7 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens/{id}/agenda', \toubilib\api\actions\AgendaPraticienAction::class);
     $app->get('/patients/{id}', GetPatientAction::class);
 
+    $app->post('/auth/login', \toubilib\api\actions\AuthLoginAction::class);
 
 
     return $app;

@@ -31,6 +31,6 @@ class AnnulerRDVAction
         }
 
         $response->getBody()->write(json_encode(['message' => 'Rendez-vous annulé']));
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withStatus(202)->withHeader('Content-Type', 'application/json');
     }
 }
