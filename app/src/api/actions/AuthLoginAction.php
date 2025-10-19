@@ -52,8 +52,17 @@ class AuthLoginAction
             $res->getBody()->write(json_encode($out, JSON_UNESCAPED_UNICODE));
             return $res->withHeader('Content-Type', 'application/json')->withStatus(200);
         } catch (\Exception $e) {
-            $status = 400;
-            $msg = $e->getMessage();
+            $status = 500; // Erreur serveur par défaut
+            $msg = "Erreur interne du serveur";
+            
+            // Seulement pour les erreurs de validation métier spécifiques
+            if (strpos($e->getMessage(), 'inexistant') !== false) {
+                $status = 404;
+                $msg = $e->getMessage();
+            } elseif (strpos($e->getMessage(), 'invalide') !== false) {
+                $status = 400;
+                $msg = $e->getMessage();
+            }
 
             $res = new SlimResponse();
             $res->getBody()->write(json_encode(['error' => $msg], JSON_UNESCAPED_UNICODE));

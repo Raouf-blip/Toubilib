@@ -36,6 +36,13 @@ class AuthInputDataValidationMiddleware
             $errors[] = "Format d'email invalide";
         }
 
+        //Capture les erreurs après validation email
+        if (!empty($errors)) {
+            $res = new SlimResponse();
+            $res->getBody()->write(json_encode(['errors' => $errors], JSON_UNESCAPED_UNICODE));
+            return $res->withHeader('Content-Type', 'application/json')->withStatus(400);
+        }
+
         $dto = new InputAuthDTO(
             (string)$data['email'],
             (string)$data['mdp']
