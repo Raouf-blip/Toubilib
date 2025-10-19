@@ -13,8 +13,8 @@ class HomeAction
             'message' => "Bienvenue sur l'API Toubilib",
             'endpoints' => [
                 "POST /auth/login/" => "Authentification de l'utilisateur",
-                //test auth -> email:Denis.Teixeira@hotmail.fr mdp:test sur POSTMAN à mettre dans body en JSON {"email": "Denis.Teixeira@hotmail.fr","mdp": "test"}
-
+                //test auth Patient -> email:Denis.Teixeira@hotmail.fr mdp:test sur POSTMAN à mettre dans body en JSON {"email": "Denis.Teixeira@hotmail.fr","mdp": "test"}
+                //test auth Praticien -> email:dith.Didier@club-internet.fr mdp:test sur POSTMAN à mettre dans body en JSON {"email": "dith.Didier@club-internet.fr", "mdp": "test"}
                 "GET /praticiens" => "Lister les praticiens",
                 "GET /praticiens/{id}" => "Afficher les détails d'un praticien",
                 "GET /praticiens/{id}/rdvs/occupes" => "Lister les créneaux occupés d'un praticien",

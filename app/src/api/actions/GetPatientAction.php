@@ -40,6 +40,6 @@ class GetPatientAction
             'telephone' => $patient->getTelephone()
         ], JSON_UNESCAPED_SLASHES));
 
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
 }
