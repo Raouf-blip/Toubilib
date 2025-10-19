@@ -4,7 +4,7 @@ namespace toubilib\core\application\usecases;
 use toubilib\core\application\ports\PatientRepositoryInterface;
 use toubilib\core\domain\entities\Patient;
 
-class ServicePatient
+class ServicePatient implements ServicePatientInterface
 {
     private PatientRepositoryInterface $patientRepository;
 

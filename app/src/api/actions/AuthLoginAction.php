@@ -26,7 +26,7 @@ class AuthLoginAction
     {
         $dto = $request->getAttribute('inputAuthDto');
         if (! $dto) {
-            return $this->createErrorResponse('Input DTO manquant (middleware absent?)', 500);
+            return $this->createErrorResponse('Erreur de configuration serveur', 500);
         }
 
         try {
@@ -71,7 +71,7 @@ class AuthLoginAction
             return $res->withHeader('Content-Type', 'application/json')->withStatus(200);
         } catch (\Exception $e) {
             $status = 500; // Erreur serveur par défaut
-            $msg = "Erreur interne du serveur";
+            $msg = "Une erreur est survenue lors de l'authentification";
             
             // Seulement pour les erreurs de validation métier spécifiques
             if (strpos($e->getMessage(), 'inexistant') !== false) {

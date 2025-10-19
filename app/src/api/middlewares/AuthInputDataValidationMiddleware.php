@@ -20,7 +20,7 @@ class AuthInputDataValidationMiddleware
         $required = ['email', 'mdp'];
         foreach ($required as $k) {
             if (!isset($data[$k]) || $data[$k] === '') {
-                $errors[] = "Champ requis manquant: $k";
+                $errors[] = "Le champ '$k' est requis";
             }
         }
 
@@ -33,7 +33,7 @@ class AuthInputDataValidationMiddleware
 
         //Validation du format email
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "Format d'email invalide";
+            $errors[] = "L'email doit être au format valide (ex: user@example.com)";
         }
 
         //Capture les erreurs après validation email

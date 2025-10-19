@@ -82,6 +82,12 @@ class ServiceRDV implements ServiceRDVInterface
             throw new Exception("Patient inexistant");
         }
 
+        // Vérifier que la date n'est pas dans le passé
+        $now = new DateTime();
+        if ($debut < $now) {
+            throw new Exception("Impossible de créer un rendez-vous dans le passé");
+        }
+
         $motifsAutorises = $this->servicePraticien->getMotifsVisite($dto->praticienId);
         if (!in_array($dto->motifVisite, $motifsAutorises, true)) {
             throw new Exception("Motif de visite non autorisé pour ce praticien");

@@ -18,16 +18,16 @@ class RDVInputDataValidationMiddleware
         $required = ['praticienId', 'patientId', 'dateHeureDebut', 'duree', 'motifVisite'];
         foreach ($required as $k) {
             if (!isset($data[$k]) || $data[$k] === '') {
-                $errors[] = "Champ requis manquant: $k";
+                $errors[] = "Le champ '$k' est requis";
             }
         }
 
         if (!isset($data['duree']) || !is_numeric($data['duree'])) {
-            $errors[] = "duree doit être un entier (minutes)";
+            $errors[] = "La durée doit être un nombre entier (en minutes)";
         } else {
             $duree = (int)$data['duree'];
             if ($duree <= 0 || $duree > 24*60) {
-                $errors[] = "duree invalide (1-1440 minutes)";
+                $errors[] = "La durée doit être entre 1 et 1440 minutes";
             }
         }
 
@@ -35,7 +35,7 @@ class RDVInputDataValidationMiddleware
             try {
                 new \DateTime($data['dateHeureDebut']);
             } catch (\Exception $e) {
-                $errors[] = "dateHeureDebut format invalide (ex: '2025-12-10 14:00:00')";
+                $errors[] = "La date doit être au format 'YYYY-MM-DD HH:MM:SS' (ex: '2025-12-10 14:00:00')";
             }
         }
 
