@@ -19,7 +19,7 @@ return function( \Slim\App $app):\Slim\App {
 
 
 
-    // $app->get('/', HomeAction::class)->setName('home');
+    $app->get('/', HomeAction::class)->setName('home');
 
     $app->get('/praticiens', ListPraticiensAction::class)->setName('list_praticiens');
 
