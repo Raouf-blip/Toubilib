@@ -1,4 +1,5 @@
 <?php
+
 namespace toubilib\api\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -33,10 +34,18 @@ class AuthLoginAction
                 return $res->withHeader('Content-Type', 'application/json')->withStatus(401);
             }
 
+
+            if ($auth->role === 1) {
+                $nomRole = 'Patient';
+            } elseif ($auth->role === 10) {
+                $nomRole = 'Praticien';
+            } else {
+                $nomRole = 'Inconnu';
+            }
             $out = [
                 'id' => $auth->id,
                 'email' => $auth->email,
-                'role' => $auth->role
+                'role' => $auth->role . ' - ' . $nomRole
             ];
 
             $res = new SlimResponse();

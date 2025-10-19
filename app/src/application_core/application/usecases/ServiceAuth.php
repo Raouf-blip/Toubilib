@@ -4,7 +4,7 @@ namespace toubilib\core\application\usecases;
 use toubilib\core\application\dto\AuthDTO;
 use toubilib\core\application\ports\AuthRepositoryInterface;
 
-class ServiceAuth
+class ServiceAuth implements ServiceAuthInterface
 {
     private AuthRepositoryInterface $authRepository;
 

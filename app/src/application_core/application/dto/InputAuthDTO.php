@@ -4,13 +4,13 @@ namespace toubilib\core\application\dto;
 class InputAuthDTO
 {
     public string $email;
-    public string $password;
+    public string $mdp;
 
     public function __construct(
         string $email,
-        string $password
+        string $mdp
     ) {
         $this->email = $email;
-        $this->password = $password;
+        $this->mdp = $mdp;
     }
 }

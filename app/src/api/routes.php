@@ -18,8 +18,6 @@ use toubilib\api\actions\GetPatientAction;
 
 return function( \Slim\App $app):\Slim\App {
 
-
-
     $app->get('/', HomeAction::class)->setName('home');
 
     $app->post('/auth/login', \toubilib\api\actions\AuthLoginAction::class)

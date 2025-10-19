@@ -15,7 +15,10 @@ use toubilib\core\application\usecases\ServicePatient;
 use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\core\application\ports\AuthRepositoryInterface;
 use toubilib\core\application\usecases\ServicePatientInterface;
+use toubilib\core\application\usecases\ServiceAuth;
+use toubilib\core\application\usecases\ServiceAuthInterface;
 use toubilib\infra\repositories\PDOAuthRepository;
+use toubilib\api\actions\AuthLoginAction;
 
 return [
 
@@ -56,44 +59,48 @@ return [
     'pdo.auth' => fn() => new PDO(
         sprintf(
             'pgsql:host=%s;port=%s;dbname=%s',
-            $_ENV['rdv.host'],
-            $_ENV['rdv.port'] ?? 5432,
-            $_ENV['rdv.database']
+            $_ENV['auth.host'],
+            $_ENV['auth.port'] ?? 5432,
+            $_ENV['auth.database']
         ),
-        $_ENV['rdv.username'],
-        $_ENV['rdv.password']
+        $_ENV['auth.username'],
+        $_ENV['auth.password']
     ),
 
     // repositories
     PraticienRepositoryInterface::class =>
-        fn(ContainerInterface $c) => new PDOPraticienRepository($c->get('pdo.praticien')),
+    fn(ContainerInterface $c) => new PDOPraticienRepository($c->get('pdo.praticien')),
 
     PatientRepositoryInterface::class =>
-        fn(ContainerInterface $c) => new PDOPatientRepository($c->get('pdo.patient')),
+    fn(ContainerInterface $c) => new PDOPatientRepository($c->get('pdo.patient')),
 
     RDVRepositoryInterface::class =>
-        fn(ContainerInterface $c) => new PDORDVRepository($c->get('pdo.rdv')),
+    fn(ContainerInterface $c) => new PDORDVRepository($c->get('pdo.rdv')),
 
-    AuthRepositoryInterface::class => function($c) {
-        fn(ContainerInterface $c) => new PDOAuthRepository($c->get('pdo.auth'));
-    },
+    AuthRepositoryInterface::class =>
+    fn(ContainerInterface $c) => new PDOAuthRepository($c->get('pdo.auth')),
 
     // services
     ServicePraticienInterface::class =>
-        fn(ContainerInterface $c) => new ServicePraticien($c->get(PraticienRepositoryInterface::class)),
+    fn(ContainerInterface $c) => new ServicePraticien($c->get(PraticienRepositoryInterface::class)),
 
     ServicePatient::class =>
-        fn(ContainerInterface $c) => new ServicePatient($c->get(PatientRepositoryInterface::class)),
-    
+    fn(ContainerInterface $c) => new ServicePatient($c->get(PatientRepositoryInterface::class)),
+
     ServicePatientInterface::class =>
-        fn(ContainerInterface $c) => new ServicePatient($c->get(PatientRepositoryInterface::class)),
+    fn(ContainerInterface $c) => new ServicePatient($c->get(PatientRepositoryInterface::class)),
 
     ServiceRDVInterface::class =>
-        fn(ContainerInterface $c) => new ServiceRDV(
-            $c->get(RDVRepositoryInterface::class),
-            $c->get(ServicePraticienInterface::class),
-            $c->get(ServicePatient::class)
-        ),
+    fn(ContainerInterface $c) => new ServiceRDV(
+        $c->get(RDVRepositoryInterface::class),
+        $c->get(ServicePraticienInterface::class),
+        $c->get(ServicePatient::class)
+    ),
+
+    ServiceAuthInterface::class =>
+    fn(ContainerInterface $c) => new ServiceAuth(
+        $c->get(AuthRepositoryInterface::class)
+    ),
 
     // pour éviter d'injecter direct l'implémentation
     ServiceRDV::class => fn(ContainerInterface $c) => $c->get(ServiceRDVInterface::class),
@@ -101,4 +108,9 @@ return [
     AnnulerRDVAction::class => function (ContainerInterface $c) {
         return new AnnulerRDVAction($c->get(ServiceRDVInterface::class));
     },
+
+    AuthLoginAction::class =>
+    fn(ContainerInterface $c) => new AuthLoginAction(
+        $c->get(ServiceAuthInterface::class)
+    )
 ];
