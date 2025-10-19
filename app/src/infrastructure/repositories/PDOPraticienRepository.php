@@ -17,7 +17,7 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
 
     public function findAll(): array
     {
-        $sql = "SELECT p.id, p.nom, p.prenom, p.ville, p.email, s.id as specialite_id, s.libelle as specialite_libelle 
+        $sql = "SELECT p.id, p.nom, p.prenom, p.ville, p.email, p.telephone, s.id as specialite_id, s.libelle as specialite_libelle 
                 FROM praticien p
                 JOIN specialite s ON p.specialite_id = s.id";
         
@@ -31,7 +31,8 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
                 $row['prenom'],
                 $row['ville'],
                 $row['email'],
-                $specialite
+                $specialite,
+                $row['telephone']
             );
         }
         return $praticiens;
