@@ -23,8 +23,21 @@ class AgendaPraticienAction
         }
 
         $query = $request->getQueryParams();
-        $dateDebut = isset($query['dateDebut']) ? new \DateTime($query['dateDebut']) : null;
-        $dateFin = isset($query['dateFin']) ? new \DateTime($query['dateFin']) : null;
+        
+        try {
+            $dateDebut = isset($query['dateDebut']) ? new \DateTime($query['dateDebut']) : null;
+            $dateFin = isset($query['dateFin']) ? new \DateTime($query['dateFin']) : null;
+            
+            // Validation : date de début doit être antérieure à la date de fin si les deux sont fournies
+            if ($dateDebut && $dateFin && $dateDebut > $dateFin) {
+                $response->getBody()->write(json_encode(['error' => 'Date de début doit être antérieure à la date de fin']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+            
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode(['error' => 'Format de date invalide (YYYY-MM-DD)']));
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+        }
 
         $agenda = $this->serviceRDV->getAgendaPraticien($praticienId, $dateDebut, $dateFin);
 

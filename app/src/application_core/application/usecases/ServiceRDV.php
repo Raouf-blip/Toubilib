@@ -134,7 +134,7 @@ class ServiceRDV implements ServiceRDVInterface
     public function getAgendaPraticien(string $praticienId, ?\DateTime $dateDebut = null, ?\DateTime $dateFin = null): array
     {
         $dateDebut = $dateDebut ?? new \DateTime(); // par défaut aujourd'hui
-        $dateFin = $dateFin ?? clone $dateDebut;
+        $dateFin = $dateFin ?? (clone $dateDebut)->modify('+1 day'); // par défaut demain
 
         $rdvs = $this->rdvRepository->findBusySlots($praticienId, $dateDebut, $dateFin);
 
