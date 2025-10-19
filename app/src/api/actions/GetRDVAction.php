@@ -28,20 +28,28 @@ class GetRDVAction
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
-        // accès aux propriétés publiques du DTO
-        $response->getBody()->write(json_encode([
-            'id' => $rdv->id,
-            'praticienId' => $rdv->praticienId,
-            'patientId' => $rdv->patientId,
-            'patientEmail' => $rdv->patientEmail,
-            'dateHeureDebut' => $rdv->dateHeureDebut,
-            'dateHeureFin' => $rdv->dateHeureFin,
-            'status' => $rdv->status,
-            'duree' => $rdv->duree,
-            'dateCreation' => $rdv->dateCreation,
-            'motifVisite' => $rdv->motifVisite
-        ]));
+		// accès aux propriétés publiques du DTO + liens HATEOAS
+		$data = [
+			'id' => $rdv->id,
+			'praticienId' => $rdv->praticienId,
+			'patientId' => $rdv->patientId,
+			'patientEmail' => $rdv->patientEmail,
+			'dateHeureDebut' => $rdv->dateHeureDebut,
+			'dateHeureFin' => $rdv->dateHeureFin,
+			'status' => $rdv->status,
+			'duree' => $rdv->duree,
+			'dateCreation' => $rdv->dateCreation,
+			'motifVisite' => $rdv->motifVisite,
+			'links' => [
+				['rel' => 'self', 'href' => '/rdvs/' . $rdvId, 'method' => 'GET'],
+				['rel' => 'praticien', 'href' => '/praticiens/' . $rdv->praticienId, 'method' => 'GET'],
+				['rel' => 'patient', 'href' => '/patients/' . $rdv->patientId, 'method' => 'GET'],
+				['rel' => 'annuler', 'href' => '/rdvs/' . $rdvId, 'method' => 'DELETE']
+			]
+		];
 
-        return $response->withHeader('Content-Type', 'application/json');
+		$response->getBody()->write(json_encode($data));
+
+		return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
 }
