@@ -11,6 +11,11 @@ use toubilib\api\actions\HomeAction;
 use toubilib\api\actions\CreateRDVAction;
 use toubilib\api\middlewares\RDVInputDataValidationMiddleware;
 use toubilib\api\middlewares\AuthInputDataValidationMiddleware;
+use toubilib\api\middlewares\AuthNMiddleware;
+use toubilib\api\middlewares\AuthZPatientMiddleware;
+use toubilib\api\middlewares\AuthZPraticienMiddleware;
+use toubilib\api\middlewares\AuthZRDVMiddleware;
+use toubilib\api\middlewares\AuthZPraticienAgendaMiddleware;
 use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\api\actions\GetPatientAction;
 
@@ -30,14 +35,27 @@ return function( \Slim\App $app):\Slim\App {
 
     $app->get('/praticiens/{id}/rdvs/occupes', ListRDVOccupesAction::class)->setName('list_rdv_occupes');
 
-    $app->get('/rdvs/{id}', \toubilib\api\actions\GetRDVAction::class);
+    // Opération 4: Consulter un RDV - praticien ou patient du RDV
+    $app->get('/rdvs/{id}', \toubilib\api\actions\GetRDVAction::class)
+        ->add(AuthZRDVMiddleware::class)
+        ->add(AuthNMiddleware::class);
 
+    // Opération 5: Réserver un RDV - patient uniquement
     $app->post('/rdvs', CreateRDVAction::class)
         ->add(RDVInputDataValidationMiddleware::class)
+        ->add(AuthZPatientMiddleware::class)
+        ->add(AuthNMiddleware::class)
         ->setName('create_rdv');
     
-    $app->delete('/rdvs/{id}', AnnulerRDVAction::class);
-    $app->get('/praticiens/{id}/agenda', \toubilib\api\actions\AgendaPraticienAction::class);
+    // Opération 6: Annuler un RDV - praticien ou patient du RDV
+    $app->delete('/rdvs/{id}', AnnulerRDVAction::class)
+        ->add(AuthZRDVMiddleware::class)
+        ->add(AuthNMiddleware::class);
+        
+    // Opération 7: Afficher agenda praticien - praticien propriétaire
+    $app->get('/praticiens/{id}/agenda', \toubilib\api\actions\AgendaPraticienAction::class)
+        ->add(AuthZPraticienAgendaMiddleware::class)
+        ->add(AuthNMiddleware::class);
     $app->get('/patients/{id}', GetPatientAction::class);
 
     return $app;

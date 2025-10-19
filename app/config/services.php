@@ -19,6 +19,12 @@ use toubilib\core\application\usecases\ServiceAuth;
 use toubilib\core\application\usecases\ServiceAuthInterface;
 use toubilib\infra\repositories\PDOAuthRepository;
 use toubilib\api\actions\AuthLoginAction;
+use toubilib\core\application\services\JWTService;
+use toubilib\api\middlewares\AuthNMiddleware;
+use toubilib\api\middlewares\AuthZPatientMiddleware;
+use toubilib\api\middlewares\AuthZPraticienMiddleware;
+use toubilib\api\middlewares\AuthZRDVMiddleware;
+use toubilib\api\middlewares\AuthZPraticienAgendaMiddleware;
 
 return [
 
@@ -102,6 +108,18 @@ return [
         $c->get(AuthRepositoryInterface::class)
     ),
 
+    JWTService::class => fn() => new JWTService(),
+
+    AuthNMiddleware::class => fn(ContainerInterface $c) => new AuthNMiddleware($c->get(JWTService::class)),
+
+    AuthZPatientMiddleware::class => fn() => new AuthZPatientMiddleware(),
+
+    AuthZPraticienMiddleware::class => fn() => new AuthZPraticienMiddleware(),
+
+    AuthZRDVMiddleware::class => fn(ContainerInterface $c) => new AuthZRDVMiddleware($c->get(ServiceRDVInterface::class)),
+
+    AuthZPraticienAgendaMiddleware::class => fn() => new AuthZPraticienAgendaMiddleware(),
+
     // pour éviter d'injecter direct l'implémentation
     ServiceRDV::class => fn(ContainerInterface $c) => $c->get(ServiceRDVInterface::class),
 
@@ -111,6 +129,7 @@ return [
 
     AuthLoginAction::class =>
     fn(ContainerInterface $c) => new AuthLoginAction(
-        $c->get(ServiceAuthInterface::class)
+        $c->get(ServiceAuthInterface::class),
+        $c->get(JWTService::class)
     )
 ];
