@@ -22,11 +22,13 @@ class RDVInputDataValidationMiddleware
             }
         }
 
-        if (isset($data['duree']) && !is_numeric($data['duree'])) {
+        if (!isset($data['duree']) || !is_numeric($data['duree'])) {
             $errors[] = "duree doit être un entier (minutes)";
         } else {
-            $duree = isset($data['duree']) ? (int)$data['duree'] : 0;
-            if ($duree <= 0 || $duree > 24*60) $errors[] = "duree invalide";
+            $duree = (int)$data['duree'];
+            if ($duree <= 0 || $duree > 24*60) {
+                $errors[] = "duree invalide (1-1440 minutes)";
+            }
         }
 
         if (isset($data['dateHeureDebut'])) {

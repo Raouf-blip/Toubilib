@@ -37,7 +37,7 @@ class AuthNMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         } catch (\Exception $e) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Token invalide: ' . $e->getMessage()]));
+            $response->getBody()->write(json_encode(['error' => 'Token invalide']));
             return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
     }

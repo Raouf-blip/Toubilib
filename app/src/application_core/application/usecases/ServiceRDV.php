@@ -13,12 +13,12 @@ class ServiceRDV implements ServiceRDVInterface
 {
     private RDVRepositoryInterface $rdvRepository;
     private ServicePraticienInterface $servicePraticien;
-    private ServicePatient $servicePatient;
+    private ServicePatientInterface $servicePatient;
 
     public function __construct(
         RDVRepositoryInterface $rdvRepository,
         ServicePraticienInterface $servicePraticien,
-        ServicePatient $servicePatient
+        ServicePatientInterface $servicePatient
     ) {
         $this->rdvRepository = $rdvRepository;
         $this->servicePraticien = $servicePraticien;

@@ -40,7 +40,7 @@ return [
         return new ServiceRDV(
             $c->get(RDVRepositoryInterface::class),
             $c->get(ServicePraticienInterface::class),
-            $c->get(ServicePatient::class)
+            $c->get(ServicePatientInterface::class)
         );
     },
 
