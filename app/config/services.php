@@ -25,6 +25,7 @@ use toubilib\api\middlewares\AuthZPatientMiddleware;
 use toubilib\api\middlewares\AuthZPraticienMiddleware;
 use toubilib\api\middlewares\AuthZRDVMiddleware;
 use toubilib\api\middlewares\AuthZPraticienAgendaMiddleware;
+use toubilib\api\middlewares\CORSMiddleware;
 
 return [
 
@@ -119,6 +120,8 @@ return [
     AuthZRDVMiddleware::class => fn(ContainerInterface $c) => new AuthZRDVMiddleware($c->get(ServiceRDVInterface::class)),
 
     AuthZPraticienAgendaMiddleware::class => fn() => new AuthZPraticienAgendaMiddleware(),
+
+    CORSMiddleware::class => fn() => new CORSMiddleware(),
 
     // pour éviter d'injecter direct l'implémentation
     ServiceRDV::class => fn(ContainerInterface $c) => $c->get(ServiceRDVInterface::class),

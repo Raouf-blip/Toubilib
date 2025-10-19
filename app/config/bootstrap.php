@@ -2,6 +2,7 @@
 
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
+use toubilib\api\middlewares\CORSMiddleware;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -25,6 +26,10 @@ $app = AppFactory::create();
 
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
+
+// Ajouter le middleware CORS globalement
+$app->add(new CORSMiddleware());
+
 $app->addErrorMiddleware(
     $container->get('displayErrorDetails'), 
     true, 
