@@ -31,17 +31,37 @@ class ListRDVOccupesAction
         try {
             $debut = new DateTime($dateDebut);
             $fin = new DateTime($dateFin);
+            
+            // Validation : date de début doit être antérieure à la date de fin
+            if ($debut > $fin) {
+                $response->getBody()->write(json_encode(['error' => 'Date de début doit être antérieure à la date de fin']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+            
+            // Limiter la période à 1 an maximum pour éviter les surcharges
+            $diff = $fin->diff($debut);
+            if ($diff->days > 365) {
+                $response->getBody()->write(json_encode(['error' => 'Période maximale de 1 an']));
+                return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
+            }
+            
         } catch (Exception $e) {
-            $response->getBody()->write(json_encode(['error' => 'Format de date invalide']));
+            $response->getBody()->write(json_encode(['error' => 'Format de date invalide (YYYY-MM-DD)']));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         $creneaux = $this->serviceRDV->listerCreneauxOccupes($praticienId, $debut, $fin);
 
         $result = array_map(fn($rdv) => [
+            'id' => $rdv->id,
             'dateHeureDebut' => $rdv->dateHeureDebut,
             'dateHeureFin' => $rdv->dateHeureFin,
-            'motifVisite' => $rdv->motifVisite
+            'motifVisite' => $rdv->motifVisite,
+            'duree' => $rdv->duree,
+            'status' => $rdv->status,
+            'patientId' => $rdv->patientId,
+            'patientEmail' => $rdv->patientEmail,
+            'dateCreation' => $rdv->dateCreation
         ], $creneaux);
 
         $response->getBody()->write(json_encode($result));

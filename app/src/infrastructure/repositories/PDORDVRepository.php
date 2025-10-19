@@ -20,7 +20,9 @@ class PDORDVRepository implements RDVRepositoryInterface
                        date_heure_fin, status, duree, date_creation, motif_visite
                 FROM rdv
                 WHERE praticien_id = :pid
-                  AND DATE(date_heure_debut) BETWEEN :debut AND :fin";
+                  AND DATE(date_heure_debut) BETWEEN :debut AND :fin
+                  AND status = 0
+                ORDER BY date_heure_debut ASC";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
