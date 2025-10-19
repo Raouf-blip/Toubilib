@@ -1,4 +1,5 @@
 <?php
+
 namespace toubilib\infra\repositories;
 
 use PDO;
@@ -7,10 +8,17 @@ use toubilib\core\domain\entities\Auth;
 
 class PDOAuthRepository implements AuthRepositoryInterface
 {
-    public function findById(string $authId): ?Auth
+    private PDO $pdo;
+
+    public function __construct(PDO $pdo)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM patient WHERE id = :id");
-        $stmt->execute(['id' => $authId]);
+        $this->pdo = $pdo;
+    }
+
+    public function findByEmail(string $authEmail): ?Auth
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->execute(['email' => $authEmail]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$row) {
             return null;
@@ -18,7 +26,8 @@ class PDOAuthRepository implements AuthRepositoryInterface
         return new Auth(
             $row['id'],
             $row['email'],
-            $row['password']
+            $row['password'],
+            $row['role']
         );
     }
 }

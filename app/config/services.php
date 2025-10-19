@@ -13,7 +13,9 @@ use toubilib\core\application\ports\PatientRepositoryInterface;
 use toubilib\infra\repositories\PDOPatientRepository;
 use toubilib\core\application\usecases\ServicePatient;
 use toubilib\api\actions\AnnulerRDVAction;
+use toubilib\core\application\ports\AuthRepositoryInterface;
 use toubilib\core\application\usecases\ServicePatientInterface;
+use toubilib\infra\repositories\PDOAuthRepository;
 
 return [
 
@@ -51,6 +53,17 @@ return [
         $_ENV['rdv.password']
     ),
 
+    'pdo.auth' => fn() => new PDO(
+        sprintf(
+            'pgsql:host=%s;port=%s;dbname=%s',
+            $_ENV['rdv.host'],
+            $_ENV['rdv.port'] ?? 5432,
+            $_ENV['rdv.database']
+        ),
+        $_ENV['rdv.username'],
+        $_ENV['rdv.password']
+    ),
+
     // repositories
     PraticienRepositoryInterface::class =>
         fn(ContainerInterface $c) => new PDOPraticienRepository($c->get('pdo.praticien')),
@@ -60,6 +73,10 @@ return [
 
     RDVRepositoryInterface::class =>
         fn(ContainerInterface $c) => new PDORDVRepository($c->get('pdo.rdv')),
+
+    AuthRepositoryInterface::class => function($c) {
+        fn(ContainerInterface $c) => new PDOAuthRepository($c->get('pdo.auth'));
+    },
 
     // services
     ServicePraticienInterface::class =>

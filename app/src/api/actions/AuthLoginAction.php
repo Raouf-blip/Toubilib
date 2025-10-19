@@ -3,14 +3,14 @@ namespace toubilib\api\actions;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use toubilib\core\application\usecases\ServiceRDVInterface;
+use toubilib\core\application\usecases\ServiceAuthInterface;
 use Slim\Psr7\Response as SlimResponse;
 
 class AuthLoginAction
 {
-    private ServiceAuthentification $serviceAuth;
+    private ServiceAuthInterface $serviceAuth;
 
-    public function __construct(ServiceAuthentification $serviceAuth)
+    public function __construct(ServiceAuthInterface $serviceAuth)
     {
         $this->serviceAuth = $serviceAuth;
     }
@@ -34,8 +34,9 @@ class AuthLoginAction
             }
 
             $out = [
-                'id' => $auth->getId(),
-                'email' => $auth->getEmail()
+                'id' => $auth->id,
+                'email' => $auth->email,
+                'role' => $auth->role
             ];
 
             $res = new SlimResponse();

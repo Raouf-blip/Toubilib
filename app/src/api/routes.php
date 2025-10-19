@@ -10,6 +10,7 @@ use toubilib\api\actions\ListRDVOccupesAction;
 use toubilib\api\actions\HomeAction;
 use toubilib\api\actions\CreateRDVAction;
 use toubilib\api\middlewares\RDVInputDataValidationMiddleware;
+use toubilib\api\middlewares\AuthInputDataValidationMiddleware;
 use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\api\actions\GetPatientAction;
 
@@ -20,6 +21,10 @@ return function( \Slim\App $app):\Slim\App {
 
 
     $app->get('/', HomeAction::class)->setName('home');
+
+    $app->post('/auth/login', \toubilib\api\actions\AuthLoginAction::class)
+        ->add(AuthInputDataValidationMiddleware::class)
+        ->setName('auth_login');
 
     $app->get('/praticiens', ListPraticiensAction::class)->setName('list_praticiens');
 
@@ -36,9 +41,6 @@ return function( \Slim\App $app):\Slim\App {
     $app->delete('/rdvs/{id}', AnnulerRDVAction::class);
     $app->get('/praticiens/{id}/agenda', \toubilib\api\actions\AgendaPraticienAction::class);
     $app->get('/patients/{id}', GetPatientAction::class);
-
-    $app->post('/auth/login', \toubilib\api\actions\AuthLoginAction::class);
-
 
     return $app;
 };

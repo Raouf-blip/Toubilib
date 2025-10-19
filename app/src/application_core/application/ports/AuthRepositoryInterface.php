@@ -1,4 +1,6 @@
 <?php
+namespace toubilib\core\application\ports;
+
 use toubilib\core\domain\entities\Auth;
 
 interface AuthRepositoryInterface
