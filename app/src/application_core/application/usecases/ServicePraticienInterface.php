@@ -9,4 +9,5 @@ interface ServicePraticienInterface
     public function listerPraticiens(): array;
     public function RecherchePraticienByID(string $id): ?PraticienDTO;
     public function getMotifsVisite(string $praticienId): array;
+    public function getMoyensPaiement(string $praticienId): array;
 }

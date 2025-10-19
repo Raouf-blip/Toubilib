@@ -43,7 +43,21 @@ class RecherchePraticiensAction
         }
         $response->getBody()->write(json_encode([
             'status' => 'success',
-            'data' => $praticien
+            'data' => [
+                'id' => $praticien->id,
+                'nom' => $praticien->nom,
+                'prenom' => $praticien->prenom,
+                'ville' => $praticien->ville,
+                'email' => $praticien->email,
+                'telephone' => $praticien->telephone,
+                'specialite' => $praticien->specialite,
+                'structureNom' => $praticien->structureNom,
+                'adresse' => $praticien->adresse,
+                'codePostal' => $praticien->codePostal,
+                'structureVille' => $praticien->structureVille,
+                'motifsVisite' => $praticien->motifsVisite,
+                'moyensPaiement' => $praticien->moyensPaiement
+            ]
         ]));
         return $response
             ->withHeader('Content-Type', 'application/json')

@@ -31,11 +31,20 @@ class ServicePraticien implements ServicePraticienInterface
         if ($praticien === null) {
             return null;
         }
-        return new PraticienDTO($praticien);
+        
+        $motifsVisite = $this->praticienRepository->getMotifsVisite($id);
+        $moyensPaiement = $this->praticienRepository->getMoyensPaiement($id);
+        
+        return new PraticienDTO($praticien, $motifsVisite, $moyensPaiement);
     }
 
     public function getMotifsVisite(string $praticienId): array
     {
         return $this->praticienRepository->getMotifsVisite($praticienId);
+    }
+
+    public function getMoyensPaiement(string $praticienId): array
+    {
+        return $this->praticienRepository->getMoyensPaiement($praticienId);
     }
 }

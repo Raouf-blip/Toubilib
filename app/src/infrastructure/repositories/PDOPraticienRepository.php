@@ -38,30 +38,38 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
     }
 
     public function findById(string $id): ?Praticien
-        {
-            $sql = "SELECT p.id, p.nom, p.prenom, p.ville, p.email, s.id as specialite_id, s.libelle as specialite_libelle
-                    FROM praticien p
-                    JOIN specialite s ON p.specialite_id = s.id
-                    WHERE p.id = :id";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute(['id' => $id]);
-            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+    {
+        $sql = "SELECT p.id, p.nom, p.prenom, p.ville, p.email, p.telephone, 
+                       s.id as specialite_id, s.libelle as specialite_libelle,
+                       st.nom as structure_nom, st.adresse, st.code_postal, st.ville as structure_ville
+                FROM praticien p
+                JOIN specialite s ON p.specialite_id = s.id
+                LEFT JOIN structure st ON p.structure_id = st.id
+                WHERE p.id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
-            if ($row === false) {
-                return null;
-            }
-            
-            $specialite = new Specialite($row['specialite_id'], $row['specialite_libelle']);
-            $praticien = new Praticien(
-                $row['id'],
-                $row['nom'],
-                $row['prenom'],
-                $row['ville'],
-                $row['email'],
-                $specialite
-            );
-            return $praticien;
+        if ($row === false) {
+            return null;
         }
+        
+        $specialite = new Specialite($row['specialite_id'], $row['specialite_libelle']);
+        $praticien = new Praticien(
+            $row['id'],
+            $row['nom'],
+            $row['prenom'],
+            $row['ville'],
+            $row['email'],
+            $specialite,
+            $row['telephone'],
+            $row['structure_nom'],
+            $row['adresse'],
+            $row['code_postal'],
+            $row['structure_ville']
+        );
+        return $praticien;
+    }
 
     public function getMotifsVisite(string $praticienId): array
     {
@@ -80,5 +88,24 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
         }
 
         return $motifs;
+    }
+
+    public function getMoyensPaiement(string $praticienId): array
+    {
+        $sql = "SELECT mp.libelle
+                FROM moyen_paiement mp
+                JOIN praticien2moyen pm ON mp.id = pm.moyen_id
+                WHERE pm.praticien_id = :pid";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['pid' => $praticienId]);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $moyens = [];
+        foreach ($rows as $row) {
+            $moyens[] = $row['libelle'];
+        }
+
+        return $moyens;
     }
 }
