@@ -16,6 +16,7 @@ class AuthInputDataValidationMiddleware
 
         $errors = [];
 
+        //cherche les champs requis
         $required = ['email', 'mdp'];
         foreach ($required as $k) {
             if (!isset($data[$k]) || $data[$k] === '') {
@@ -23,12 +24,14 @@ class AuthInputDataValidationMiddleware
             }
         }
 
+        //Capture les erreurs
         if (!empty($errors)) {
             $res = new SlimResponse();
             $res->getBody()->write(json_encode(['errors' => $errors], JSON_UNESCAPED_UNICODE));
             return $res->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
+        //Validation du format email
         if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = "Format d'email invalide";
         }
