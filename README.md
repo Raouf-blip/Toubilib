@@ -82,14 +82,8 @@ curl -X POST http://localhost:6080/rdvs \
 ## 🔧 Configuration
 
 ### JWT Secret
-Le JWT Secret est configuré dans `app/config/.env`. Pour la production, modifiez-le :
+Le JWT Secret est configuré dans `app/config/.env`.
 
-```bash
-# Dans app/config/.env
-JWT_SECRET=ton-super-secret-personnalise-2024
-```
-
-**⚠️ Important :** Changez le secret en production pour la sécurité !
 
 ## 📊 Tableau de Bord des Réalisations
 
