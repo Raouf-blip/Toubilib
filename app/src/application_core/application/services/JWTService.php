@@ -16,7 +16,7 @@ class JWTService
 
     public function __construct()
     {
-        $this->secretKey = $_ENV['JWT_SECRET'];
+        $this->secretKey = $_ENV['JWT_SECRET'] ?? throw new \Exception('JWT_SECRET non défini dans .env');
         $this->algorithm = 'HS256';
         $this->expirationTime = 3600; // 1 heure
     }

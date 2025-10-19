@@ -26,18 +26,14 @@ class AuthLoginAction
     {
         $dto = $request->getAttribute('inputAuthDto');
         if (! $dto) {
-            $res = new SlimResponse();
-            $res->getBody()->write(json_encode(['error' => 'Input DTO manquant (middleware absent?)']));
-            return $res->withHeader('Content-Type', 'application/json')->withStatus(500);
+            return $this->createErrorResponse('Input DTO manquant (middleware absent?)', 500);
         }
 
         try {
             $auth = $this->serviceAuth->authentifier($dto->email, $dto->mdp);
 
             if (!$auth) {
-                $res = new SlimResponse();
-                $res->getBody()->write(json_encode(['error' => 'Email ou mot de passe incorrect'], JSON_UNESCAPED_UNICODE));
-                return $res->withHeader('Content-Type', 'application/json')->withStatus(401);
+                return $this->createErrorResponse('Email ou mot de passe incorrect', 401);
             }
 
 
@@ -86,9 +82,14 @@ class AuthLoginAction
                 $msg = $e->getMessage();
             }
 
-            $res = new SlimResponse();
-            $res->getBody()->write(json_encode(['error' => $msg], JSON_UNESCAPED_UNICODE));
-            return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+            return $this->createErrorResponse($msg, $status);
         }
+    }
+
+    private function createErrorResponse(string $message, int $status = 500): Response
+    {
+        $res = new SlimResponse();
+        $res->getBody()->write(json_encode(['error' => $message], JSON_UNESCAPED_UNICODE));
+        return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
     }
 }
