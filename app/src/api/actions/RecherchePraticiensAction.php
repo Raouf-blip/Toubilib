@@ -5,14 +5,17 @@ namespace toubilib\api\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\usecases\ServicePraticienInterface;
+use toubilib\core\application\services\HATEOASService;
 
 class RecherchePraticiensAction
 {
     private ServicePraticienInterface $servicePraticien;
+    private HATEOASService $hateoasService;
 
-    public function __construct(ServicePraticienInterface $servicePraticien)
+    public function __construct(ServicePraticienInterface $servicePraticien, HATEOASService $hateoasService)
     {
         $this->servicePraticien = $servicePraticien;
+        $this->hateoasService = $hateoasService;
     }
     
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -41,7 +44,8 @@ class RecherchePraticiensAction
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(404);
         }
-        $response->getBody()->write(json_encode([
+        
+        $responseData = [
             'status' => 'success',
             'data' => [
                 'id' => $praticien->id,
@@ -56,9 +60,12 @@ class RecherchePraticiensAction
                 'codePostal' => $praticien->codePostal,
                 'structureVille' => $praticien->structureVille,
                 'motifsVisite' => $praticien->motifsVisite,
-                'moyensPaiement' => $praticien->moyensPaiement
+                'moyensPaiement' => $praticien->moyensPaiement,
+                '_links' => $this->hateoasService->getPraticienLinks($praticien->id)
             ]
-        ]));
+        ];
+        
+        $response->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);

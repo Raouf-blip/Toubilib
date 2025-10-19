@@ -4,14 +4,17 @@ namespace toubilib\api\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\usecases\ServiceRDVInterface;
+use toubilib\core\application\services\HATEOASService;
 
 class GetRDVAction
 {
     private ServiceRDVInterface $serviceRDV;
+    private HATEOASService $hateoasService;
 
-    public function __construct(ServiceRDVInterface $serviceRDV)
+    public function __construct(ServiceRDVInterface $serviceRDV, HATEOASService $hateoasService)
     {
         $this->serviceRDV = $serviceRDV;
+        $this->hateoasService = $hateoasService;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -29,7 +32,7 @@ class GetRDVAction
         }
 
         // accès aux propriétés publiques du DTO
-        $response->getBody()->write(json_encode([
+        $responseData = [
             'id' => $rdv->id,
             'praticienId' => $rdv->praticienId,
             'patientId' => $rdv->patientId,
@@ -39,9 +42,11 @@ class GetRDVAction
             'status' => $rdv->status,
             'duree' => $rdv->duree,
             'dateCreation' => $rdv->dateCreation,
-            'motifVisite' => $rdv->motifVisite
-        ]));
+            'motifVisite' => $rdv->motifVisite,
+            '_links' => $this->hateoasService->getRDVLinks($rdv->id)
+        ];
 
+        $response->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE));
         return $response->withHeader('Content-Type', 'application/json');
     }
 }

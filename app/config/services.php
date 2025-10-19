@@ -26,6 +26,7 @@ use toubilib\api\middlewares\AuthZPraticienMiddleware;
 use toubilib\api\middlewares\AuthZRDVMiddleware;
 use toubilib\api\middlewares\AuthZPraticienAgendaMiddleware;
 use toubilib\api\middlewares\CORSMiddleware;
+use toubilib\core\application\services\HATEOASService;
 
 return [
 
@@ -123,6 +124,8 @@ return [
 
     CORSMiddleware::class => fn() => new CORSMiddleware(),
 
+    HATEOASService::class => fn() => new HATEOASService(),
+
     // pour éviter d'injecter direct l'implémentation
     ServiceRDV::class => fn(ContainerInterface $c) => $c->get(ServiceRDVInterface::class),
 
@@ -130,9 +133,10 @@ return [
         return new AnnulerRDVAction($c->get(ServiceRDVInterface::class));
     },
 
-    AuthLoginAction::class =>
-    fn(ContainerInterface $c) => new AuthLoginAction(
-        $c->get(ServiceAuthInterface::class),
-        $c->get(JWTService::class)
-    )
+        AuthLoginAction::class =>
+        fn(ContainerInterface $c) => new AuthLoginAction(
+            $c->get(ServiceAuthInterface::class),
+            $c->get(JWTService::class),
+            $c->get(HATEOASService::class)
+        )
 ];

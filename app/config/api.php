@@ -15,6 +15,7 @@ use toubilib\core\application\ports\RDVRepositoryInterface;
 use toubilib\infra\repositories\PDORDVRepository;
 use toubilib\core\application\usecases\ServicePatient;
 use toubilib\core\application\usecases\ServicePatientInterface;
+use toubilib\core\application\services\HATEOASService;
 
 return [
 
@@ -48,17 +49,17 @@ return [
         new ListRDVOccupesAction($c->get(ServiceRDVInterface::class)),
 
     GetRDVAction::class => fn(ContainerInterface $c) =>
-        new GetRDVAction($c->get(ServiceRDVInterface::class)),
+        new GetRDVAction($c->get(ServiceRDVInterface::class), $c->get(HATEOASService::class)),
 
     CreateRDVAction::class => fn(ContainerInterface $c) =>
         new CreateRDVAction($c->get(ServiceRDVInterface::class)),
 
     // Actions praticiens
     ListPraticiensAction::class => fn(ContainerInterface $c) =>
-        new ListPraticiensAction($c->get(ServicePraticienInterface::class)),
+        new ListPraticiensAction($c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),
 
     RecherchePraticiensAction::class => fn(ContainerInterface $c) =>
-        new RecherchePraticiensAction($c->get(ServicePraticienInterface::class)),
+        new RecherchePraticiensAction($c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),
     
     AgendaPraticienAction::class => fn(ContainerInterface $c) =>
         new AgendaPraticienAction($c->get(ServiceRDVInterface::class)),

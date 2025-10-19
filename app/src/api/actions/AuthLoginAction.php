@@ -6,17 +6,20 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\usecases\ServiceAuthInterface;
 use toubilib\core\application\services\JWTService;
+use toubilib\core\application\services\HATEOASService;
 use Slim\Psr7\Response as SlimResponse;
 
 class AuthLoginAction
 {
     private ServiceAuthInterface $serviceAuth;
     private JWTService $jwtService;
+    private HATEOASService $hateoasService;
 
-    public function __construct(ServiceAuthInterface $serviceAuth, JWTService $jwtService)
+    public function __construct(ServiceAuthInterface $serviceAuth, JWTService $jwtService, HATEOASService $hateoasService)
     {
         $this->serviceAuth = $serviceAuth;
         $this->jwtService = $jwtService;
+        $this->hateoasService = $hateoasService;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -56,15 +59,16 @@ class AuthLoginAction
             
             $token = $this->jwtService->generateToken($tokenPayload);
 
-            $out = [
-                'token' => $token,
-                'user' => [
-                    'id' => $auth->id,
-                    'email' => $auth->email,
-                    'role' => $auth->role . ' - ' . $nomRole
-                ],
-                'expires_in' => 3600 // 1 heure en secondes
-            ];
+                $out = [
+                    'token' => $token,
+                    'user' => [
+                        'id' => $auth->id,
+                        'email' => $auth->email,
+                        'role' => $auth->role . ' - ' . $nomRole
+                    ],
+                    'expires_in' => 3600, // 1 heure en secondes
+                    '_links' => $this->hateoasService->getAuthLinks()
+                ];
 
             $res = new SlimResponse();
             $res->getBody()->write(json_encode($out, JSON_UNESCAPED_UNICODE));

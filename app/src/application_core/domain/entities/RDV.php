@@ -32,13 +32,17 @@ class RDV
 
     public function annuler(): void
     {
-        $now = new DateTime();
+        $now = new DateTime('now');
 
         if ($this->status === 1) {
             throw new Exception("Rendez-vous déjà annulé");
         }
 
-        if ($this->dateHeureDebut < $now) {
+        // Comparer seulement la date (sans l'heure) pour éviter les problèmes de fuseau horaire
+        $dateRDV = $this->dateHeureDebut->format('Y-m-d');
+        $dateNow = $now->format('Y-m-d');
+        
+        if ($dateRDV < $dateNow) {
             throw new Exception("Impossible d'annuler un rendez-vous passé");
         }
 

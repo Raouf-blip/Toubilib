@@ -16,7 +16,7 @@ class JWTService
 
     public function __construct()
     {
-        $this->secretKey = $_ENV['JWT_SECRET'] ?? 'toubilib-secret-key-change-in-production';
+        $this->secretKey = $_ENV['JWT_SECRET'];
         $this->algorithm = 'HS256';
         $this->expirationTime = 3600; // 1 heure
     }
