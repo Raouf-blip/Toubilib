@@ -46,6 +46,8 @@ services:
         - toubilib.net
       volumes:
         - ./sql:/var/sql
+        - ./sql/toubiauth.schema.sql:/docker-entrypoint-initdb.d/1_toubiauth.schema.sql
+        - ./sql/toubiauth.data.sql:/docker-entrypoint-initdb.d/2_toubiauth.data.sql
 
   toubirdv.db:
     image: 'postgres:latest'
