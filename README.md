@@ -2,6 +2,10 @@
 
 API RESTful développée avec PHP/Slim pour la gestion de rendez-vous médicaux entre patients et praticiens.
 
+## Lien vers le dépôt git
+
+https://github.com/Raouf-blip/Toubilib
+
 ## 🚀 Installation et Lancement
 
 ### Prérequis
@@ -97,11 +101,27 @@ Le JWT Secret est configuré dans `app/config/.env`.
 
 ### Réalisations par Membre du Groupe
 
-> **Note :** À compléter par l'équipe de développement
-
 | Membre | Contributions Principales |
 |--------|---------------------------|
-| **[Nom Membre 1]** | Architecture hexagonale, Authentification JWT, Middlewares |
-| **[Nom Membre 2]** | API RESTful, Validation des données, HATEOAS |
-| **[Nom Membre 3]** | Bases de données, Docker, Tests fonctionnels |
+| **Noah** | Architecture hexagonale, Authentification JWT, Middlewares |
+| **Noah, Arman** | API RESTful, Validation des données, HATEOAS |
+| **Noah** | Bases de données, Docker, Tests fonctionnels |
+| **Léo** | Home |
+| **Raouf** | Lister les praticiens |
+| **Raouf, Arman** | Détail praticien |
+| **Raouf** | Créneaux occupés |
+| **Raouf** | Consulter RDV |
+| **Raouf** | Réserver RDV |
+| **Raouf** | Annuler RDV |
+| **Raouf** | Agenda praticien |
+| **Noah, Léo** | Authentification |
+| **Arman** | Status |
+| **Noah, Raouf, Arman** | Readme |
 
+### Branche
+
+| Membre | Branche |
+|--------|---------------------------|
+| **Raouf, Noah, Léo, Arman** | Main |
+| **Arman** | Lien-Hateoas |
+| **Authentification** | Léo |
