@@ -18,6 +18,7 @@ use toubilib\api\middlewares\AuthZRDVMiddleware;
 use toubilib\api\middlewares\AuthZPraticienAgendaMiddleware;
 use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\api\actions\GetPatientAction;
+use toubilib\api\actions\GetConsultationsPatientAction;
 
 
 
@@ -57,6 +58,11 @@ return function( \Slim\App $app):\Slim\App {
         ->add(AuthZPraticienAgendaMiddleware::class)
         ->add(AuthNMiddleware::class);
     $app->get('/patients/{id}', GetPatientAction::class);
+
+    // Opération &&: Afficher historique des consultations d'un patient
+    $app->get('/patients/{id}/consultations', GetConsultationsPatientAction::class)
+    ->add(AuthZPatientMiddleware::class)
+    ->add(AuthNMiddleware::class);
 
     return $app;
 };

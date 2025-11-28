@@ -11,6 +11,7 @@ use toubilib\core\application\usecases\ServiceRDV;
 use toubilib\api\actions\GetRDVAction;
 use toubilib\api\actions\CreateRDVAction;
 use toubilib\api\actions\GetPatientAction;
+use toubilib\api\actions\GetConsultationsPatientAction;
 use toubilib\core\application\ports\RDVRepositoryInterface;
 use toubilib\infra\repositories\PDORDVRepository;
 use toubilib\core\application\usecases\ServicePatient;
@@ -53,6 +54,9 @@ return [
 
     CreateRDVAction::class => fn(ContainerInterface $c) =>
         new CreateRDVAction($c->get(ServiceRDVInterface::class)),
+    
+    GetConsultationsPatientAction::class => fn(ContainerInterface $c) =>
+        new GetConsultationsPatientAction($c->get(ServiceRDVInterface::class), $c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),
 
     // Actions praticiens
     ListPraticiensAction::class => fn(ContainerInterface $c) =>
@@ -67,4 +71,5 @@ return [
     // Actions patients
     GetPatientAction::class => fn(ContainerInterface $c) =>
         new GetPatientAction($c->get(ServicePatientInterface::class)),
+
 ];

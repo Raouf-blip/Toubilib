@@ -161,5 +161,25 @@ class ServiceRDV implements ServiceRDVInterface
         return $agenda;
     }
 
+    public function listerConsultationsPatient(string $id): array
+    {
+        $consultations = $this->rdvRepository->findConsultationsByPatientId($id);
+        $praticienDTOs = [];
+        foreach ($consultations as $consultation) {
+            $praticienDTOs[] = new RDVDTO(
+                $consultation->getId(),
+                $consultation->getPraticienId(),
+                $consultation->getPatientId(),
+                $consultation->getPatientEmail(),
+                $consultation->getDateHeureDebut()->format('Y-m-d H:i:s'),
+                $consultation->getDateHeureFin()?->format('Y-m-d H:i:s'),
+                $consultation->getStatus(),
+                $consultation->getDuree(),
+                $consultation->getDateCreation()?->format('Y-m-d H:i:s'),
+                $consultation->getMotifVisite()
+            );
+        }
+        return $praticienDTOs;
+    }
 
 }

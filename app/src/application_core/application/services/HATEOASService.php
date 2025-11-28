@@ -60,6 +60,11 @@ class HATEOASService
             'self' => [
                 'href' => "{$this->baseUrl}/patients/{$patientId}",
                 'method' => 'GET'
+            ],
+            'consultations' => [
+                'href' => "{$this->baseUrl}/patients/{$patientId}/consultations",
+                'method' => 'GET',
+                'description' => 'Lister les consultations du patient'
             ]
         ];
     }

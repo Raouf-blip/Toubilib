@@ -12,4 +12,5 @@ interface ServiceRDVInterface
     public function creerRendezVous(InputRDVDTO $dto): RDV;
     public function annulerRendezVous(string $rdvId): void;
     public function getAgendaPraticien(string $praticienId, ?\DateTime $dateDebut = null, ?\DateTime $dateFin = null): array;
+    public function listerConsultationsPatient(string $patientid): array;
 }
