@@ -4,6 +4,7 @@ use Psr\Container\ContainerInterface;
 use toubilib\api\actions\AgendaPraticienAction;
 use toubilib\api\actions\ListPraticiensAction;
 use toubilib\api\actions\RecherchePraticiensAction;
+use toubilib\api\actions\RecherchePraticiensSpeVilleAction;
 use toubilib\core\application\usecases\ServicePraticienInterface;
 use toubilib\api\actions\ListRDVOccupesAction;
 use toubilib\core\application\usecases\ServiceRDVInterface;
@@ -61,6 +62,9 @@ return [
     RecherchePraticiensAction::class => fn(ContainerInterface $c) =>
         new RecherchePraticiensAction($c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),
     
+    RecherchePraticiensSpeVilleAction::class => fn(ContainerInterface $c) =>
+        new RecherchePraticiensSpeVilleAction($c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),
+
     AgendaPraticienAction::class => fn(ContainerInterface $c) =>
         new AgendaPraticienAction($c->get(ServiceRDVInterface::class)),
 
