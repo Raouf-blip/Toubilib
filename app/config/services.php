@@ -13,6 +13,8 @@ use toubilib\core\application\ports\PatientRepositoryInterface;
 use toubilib\infra\repositories\PDOPatientRepository;
 use toubilib\core\application\usecases\ServicePatient;
 use toubilib\api\actions\AnnulerRDVAction;
+use toubilib\api\actions\MarquerRDVHonoreAction;
+use toubilib\api\actions\MarquerRDVNonHonoreAction;
 use toubilib\core\application\ports\AuthRepositoryInterface;
 use toubilib\core\application\usecases\ServicePatientInterface;
 use toubilib\core\application\usecases\ServiceAuth;
@@ -24,6 +26,7 @@ use toubilib\api\middlewares\AuthNMiddleware;
 use toubilib\api\middlewares\AuthZPatientMiddleware;
 use toubilib\api\middlewares\AuthZPraticienMiddleware;
 use toubilib\api\middlewares\AuthZRDVMiddleware;
+use toubilib\api\middlewares\AuthZPraticienRDVMiddleware;
 use toubilib\api\middlewares\AuthZPraticienAgendaMiddleware;
 use toubilib\api\middlewares\CORSMiddleware;
 use toubilib\core\application\services\HATEOASService;
@@ -135,6 +138,8 @@ return [
 
     AuthZRDVMiddleware::class => fn(ContainerInterface $c) => new AuthZRDVMiddleware($c->get(ServiceRDVInterface::class)),
 
+    AuthZPraticienRDVMiddleware::class => fn(ContainerInterface $c) => new AuthZPraticienRDVMiddleware($c->get(ServiceRDVInterface::class)),
+
     AuthZPraticienAgendaMiddleware::class => fn() => new AuthZPraticienAgendaMiddleware(),
 
     AuthZPraticienIndisponibiliteMiddleware::class => fn() => new \toubilib\api\middlewares\AuthZPraticienIndisponibiliteMiddleware(),
@@ -150,7 +155,15 @@ return [
         return new AnnulerRDVAction($c->get(ServiceRDVInterface::class));
     },
 
-        AuthLoginAction::class =>
+    MarquerRDVHonoreAction::class => function (ContainerInterface $c) {
+        return new MarquerRDVHonoreAction($c->get(ServiceRDVInterface::class));
+    },
+
+    MarquerRDVNonHonoreAction::class => function (ContainerInterface $c) {
+        return new MarquerRDVNonHonoreAction($c->get(ServiceRDVInterface::class));
+    },
+
+    AuthLoginAction::class =>
         fn(ContainerInterface $c) => new AuthLoginAction(
             $c->get(ServiceAuthInterface::class),
             $c->get(JWTService::class),

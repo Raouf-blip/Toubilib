@@ -48,4 +48,52 @@ class RDV
 
         $this->status = 1;
     }
+
+    public function honorer(): void
+    {
+        if ($this->status === 1) {
+            throw new Exception("Impossible de marquer un rendez-vous annulé comme honoré");
+        }
+
+        if ($this->status === 2) {
+            throw new Exception("Rendez-vous déjà marqué comme honoré");
+        }
+
+        if ($this->status === 3) {
+            throw new Exception("Impossible de marquer un rendez-vous non honoré comme honoré");
+        }
+
+        $now = new DateTime('now');
+        
+        // On peut marquer comme honoré seulement si le RDV est passé
+        if ($this->dateHeureDebut > $now) {
+            throw new Exception("Impossible de marquer un rendez-vous futur comme honoré");
+        }
+
+        $this->status = 2;
+    }
+
+    public function nonHonorer(): void
+    {
+        if ($this->status === 1) {
+            throw new Exception("Impossible de marquer un rendez-vous annulé comme non honoré");
+        }
+
+        if ($this->status === 2) {
+            throw new Exception("Impossible de marquer un rendez-vous honoré comme non honoré");
+        }
+
+        if ($this->status === 3) {
+            throw new Exception("Rendez-vous déjà marqué comme non honoré");
+        }
+
+        $now = new DateTime('now');
+        
+        // On peut marquer comme non honoré seulement si le RDV est passé
+        if ($this->dateHeureDebut > $now) {
+            throw new Exception("Impossible de marquer un rendez-vous futur comme non honoré");
+        }
+
+        $this->status = 3;
+    }
 }
