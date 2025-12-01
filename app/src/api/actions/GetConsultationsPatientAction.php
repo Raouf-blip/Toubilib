@@ -30,17 +30,18 @@ class GetConsultationsPatientAction
         }
 
         $consultations = $this->serviceRDV->listerConsultationsPatient($patientId);
-        if (!$patientId) {
-            $response->getBody()->write(json_encode(['error' => 'RDV non trouvé']));
-            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
-        }
 
         $data = [];
         foreach ($consultations as $consultation) {
             $praticien = $this->servicePraticien->RecherchePraticienByID($consultation->praticienId);
             $data[] = [
-                'nom praticien' => $praticien->nom,
-                'prenom praticien' => $praticien->prenom,
+                'id' => $consultation->id,
+                'praticien' => [
+                    'id' => $praticien->id,
+                    'nom' => $praticien->nom,
+                    'prenom' => $praticien->prenom,
+                    'specialite' => $praticien->specialite
+                ],
                 'dateHeureDebut' => $consultation->dateHeureDebut,
                 'dateHeureFin' => $consultation->dateHeureFin,
                 'motifVisite' => $consultation->motifVisite,
@@ -50,9 +51,11 @@ class GetConsultationsPatientAction
                 '_links' => $this->hateoasService->getRDVLinks($consultation->id)
             ];
         }
+        
         $responseData = [
-            'praticiens' => $data,
-            '_links' => $this->hateoasService->getPraticiensListLinks()
+            'status' => 'success',
+            'data' => $data,
+            '_links' => $this->hateoasService->getPatientLinks($patientId)
         ];
 
         $response->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE));

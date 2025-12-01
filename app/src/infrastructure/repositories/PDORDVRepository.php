@@ -104,7 +104,7 @@ class PDORDVRepository implements RDVRepositoryInterface
 
     public function findConsultationsByPatientId(string $patientId): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM rdv WHERE patient_id = :patient_id");
+        $stmt = $this->pdo->prepare("SELECT * FROM rdv WHERE patient_id = :patient_id ORDER BY date_heure_debut DESC");
         $stmt->execute(['patient_id' => $patientId]);
         $consultations = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
