@@ -137,6 +137,30 @@ class ServiceRDV implements ServiceRDVInterface
         $this->rdvRepository->updateStatus($rdv->getId(), $rdv->getStatus());
     }
 
+    public function marquerCommeHonore(string $rdvId): void
+    {
+        $rdv = $this->rdvRepository->findById($rdvId);
+        if (!$rdv) {
+            throw new Exception("RDV inexistant");
+        }
+
+        $rdv->honorer(); // méthode métier sur l'entité RDV, change le status à 2
+
+        $this->rdvRepository->updateStatus($rdv->getId(), $rdv->getStatus());
+    }
+
+    public function marquerCommeNonHonore(string $rdvId): void
+    {
+        $rdv = $this->rdvRepository->findById($rdvId);
+        if (!$rdv) {
+            throw new Exception("RDV inexistant");
+        }
+
+        $rdv->nonHonorer(); // méthode métier sur l'entité RDV, change le status à 3
+
+        $this->rdvRepository->updateStatus($rdv->getId(), $rdv->getStatus());
+    }
+
     public function getAgendaPraticien(string $praticienId, ?\DateTime $dateDebut = null, ?\DateTime $dateFin = null): array
     {
         $dateDebut = $dateDebut ?? new \DateTime(); // par défaut aujourd'hui

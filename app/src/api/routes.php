@@ -16,8 +16,11 @@ use toubilib\api\middlewares\AuthZPatientMiddleware;
 use toubilib\api\middlewares\AuthZPraticienMiddleware;
 use toubilib\api\middlewares\AuthZRDVMiddleware;
 use toubilib\api\middlewares\AuthZPraticienAgendaMiddleware;
+use toubilib\api\middlewares\AuthZPraticienRDVMiddleware;
 use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\api\actions\GetPatientAction;
+use toubilib\api\actions\MarquerRDVHonoreAction;
+use toubilib\api\actions\MarquerRDVNonHonoreAction;
 
 
 
@@ -51,6 +54,18 @@ return function( \Slim\App $app):\Slim\App {
     $app->delete('/rdvs/{id}', AnnulerRDVAction::class)
         ->add(AuthZRDVMiddleware::class)
         ->add(AuthNMiddleware::class);
+    
+    // Marquer un RDV comme honoré - praticien propriétaire uniquement
+    $app->patch('/rdvs/{id}/honorer', MarquerRDVHonoreAction::class)
+        ->add(AuthZPraticienRDVMiddleware::class)
+        ->add(AuthNMiddleware::class)
+        ->setName('marquer_rdv_honore');
+    
+    // Marquer un RDV comme non honoré - praticien propriétaire uniquement
+    $app->patch('/rdvs/{id}/non-honorer', MarquerRDVNonHonoreAction::class)
+        ->add(AuthZPraticienRDVMiddleware::class)
+        ->add(AuthNMiddleware::class)
+        ->setName('marquer_rdv_non_honore');
         
     // Opération 7: Afficher agenda praticien - praticien propriétaire
     $app->get('/praticiens/{id}/agenda', \toubilib\api\actions\AgendaPraticienAction::class)
