@@ -102,4 +102,27 @@ class PDORDVRepository implements RDVRepositoryInterface
         ]);
     }
 
+    public function findConsultationsByPatientId(string $patientId): array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM rdv WHERE patient_id = :patient_id ORDER BY date_heure_debut DESC");
+        $stmt->execute(['patient_id' => $patientId]);
+        $consultations = [];
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $rdv = new RDV(
+            $row['id'],
+            $row['praticien_id'],
+            $row['patient_id'],
+            $row['patient_email'] ?? null,
+            new DateTime($row['date_heure_debut']),
+            isset($row['date_heure_fin']) ? new DateTime($row['date_heure_fin']) : null,
+            (int)$row['status'],
+            (int)$row['duree'],
+            isset($row['date_creation']) ? new DateTime($row['date_creation']) : null,
+            $row['motif_visite'] ?? null
+        );
+            $consultations[] = $rdv; 
+        }
+        return $consultations;
+    }
+
 }

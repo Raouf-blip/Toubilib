@@ -19,6 +19,14 @@ use toubilib\api\middlewares\AuthZRDVMiddleware;
 use toubilib\api\middlewares\AuthZPraticienAgendaMiddleware;
 use toubilib\api\actions\AnnulerRDVAction;
 use toubilib\api\actions\GetPatientAction;
+use toubilib\api\actions\GetConsultationsPatientAction;
+use toubilib\api\actions\RegisterPatientAction;
+use toubilib\api\middlewares\RegisterPatientInputDataValidationMiddleware;
+use toubilib\api\actions\CreateIndisponibiliteAction;
+use toubilib\api\actions\ListIndisponibilitesAction;
+use toubilib\api\actions\DeleteIndisponibiliteAction;
+use toubilib\api\middlewares\IndisponibiliteInputDataValidationMiddleware;
+use toubilib\api\middlewares\AuthZPraticienIndisponibiliteMiddleware;
 
 
 
@@ -29,6 +37,11 @@ return function( \Slim\App $app):\Slim\App {
     $app->post('/auth/login', \toubilib\api\actions\AuthLoginAction::class)
         ->add(AuthInputDataValidationMiddleware::class)
         ->setName('auth_login');
+
+    // Feature 12: S'inscrire en tant que patient
+    $app->post('/auth/register', RegisterPatientAction::class)
+        ->add(RegisterPatientInputDataValidationMiddleware::class)
+        ->setName('register_patient');
 
     $app->get('/praticiens', ListPraticiensAction::class)->setName('list_praticiens');
 
@@ -61,6 +74,30 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/praticiens/{id}/agenda', \toubilib\api\actions\AgendaPraticienAction::class)
         ->add(AuthZPraticienAgendaMiddleware::class)
         ->add(AuthNMiddleware::class);
+
+    // Feature 13: Gérer les indisponibilités temporaires d'un praticien
+    $app->post('/praticiens/{id}/indisponibilites', CreateIndisponibiliteAction::class)
+        ->add(IndisponibiliteInputDataValidationMiddleware::class)
+        ->add(AuthZPraticienIndisponibiliteMiddleware::class)
+        ->add(AuthNMiddleware::class)
+        ->setName('create_indisponibilite');
+
+    $app->get('/praticiens/{id}/indisponibilites', ListIndisponibilitesAction::class)
+        ->add(AuthZPraticienIndisponibiliteMiddleware::class)
+        ->add(AuthNMiddleware::class)
+        ->setName('list_indisponibilites');
+
+    $app->delete('/praticiens/{id}/indisponibilites/{indisponibiliteId}', DeleteIndisponibiliteAction::class)
+        ->add(AuthZPraticienIndisponibiliteMiddleware::class)
+        ->add(AuthNMiddleware::class)
+        ->setName('delete_indisponibilite');
+
     $app->get('/patients/{id}', GetPatientAction::class);
+
+    // Opération &&: Afficher historique des consultations d'un patient
+    $app->get('/patients/{id}/consultations', GetConsultationsPatientAction::class)
+    ->add(AuthZPatientMiddleware::class)
+    ->add(AuthNMiddleware::class);
+
     return $app;
 };
