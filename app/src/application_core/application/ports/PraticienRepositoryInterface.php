@@ -10,4 +10,5 @@ interface PraticienRepositoryInterface
     public function findById(string $id): ?Praticien;
     public function getMotifsVisite(string $praticienId): array;
     public function getMoyensPaiement(string $praticienId): array;
+    public function findBySpecialiteAndVille(?string $specialiteLibelle, ?string $ville): array;
 }

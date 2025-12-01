@@ -47,4 +47,14 @@ class ServicePraticien implements ServicePraticienInterface
     {
         return $this->praticienRepository->getMoyensPaiement($praticienId);
     }
+
+    public function rechercherPraticiensSpeVille(?string $specialiteLibelle, ?string $ville): array
+    {
+        $praticiens = $this->praticienRepository->findBySpecialiteAndVille($specialiteLibelle, $ville);
+        $dtos = [];
+        foreach ($praticiens as $praticien) {
+            $dtos[] = new PraticienDTO($praticien);
+        }
+        return $dtos;
+    }
 }

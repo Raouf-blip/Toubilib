@@ -6,6 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use toubilib\api\actions\ListPraticiensAction;
 use toubilib\api\actions\RecherchePraticiensAction;
+use toubilib\api\actions\RecherchePraticiensSpeVilleAction;
 use toubilib\api\actions\ListRDVOccupesAction;
 use toubilib\api\actions\HomeAction;
 use toubilib\api\actions\CreateRDVAction;
@@ -31,6 +32,10 @@ return function( \Slim\App $app):\Slim\App {
         ->setName('auth_login');
 
     $app->get('/praticiens', ListPraticiensAction::class)->setName('list_praticiens');
+
+    // feature 9 : recherche praticiens par spécialité et/ou ville
+    $app->get('/praticiens/search', RecherchePraticiensSpeVilleAction::class)
+        ->setName('recherche_praticiens_filter');
 
     $app->get('/praticiens/{id}', RecherchePraticiensAction::class)->setName('recherche_praticien');
 
