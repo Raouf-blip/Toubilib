@@ -13,7 +13,11 @@ use toubilib\api\actions\GetRDVAction;
 use toubilib\api\actions\CreateRDVAction;
 use toubilib\api\actions\GetPatientAction;
 use toubilib\api\actions\GetConsultationsPatientAction;
+use toubilib\api\actions\RegisterPatientAction;
+use toubilib\api\middlewares\RegisterPatientInputDataValidationMiddleware;
 use toubilib\core\application\ports\RDVRepositoryInterface;
+use toubilib\core\application\ports\AuthRepositoryInterface;
+use toubilib\core\application\usecases\ServiceAuthInterface;
 use toubilib\infra\repositories\PDORDVRepository;
 use toubilib\core\application\usecases\ServicePatient;
 use toubilib\core\application\usecases\ServicePatientInterface;
@@ -75,5 +79,12 @@ return [
     // Actions patients
     GetPatientAction::class => fn(ContainerInterface $c) =>
         new GetPatientAction($c->get(ServicePatientInterface::class)),
+
+    // Feature 12: Inscription patient
+    RegisterPatientAction::class => fn(ContainerInterface $c) =>
+        new RegisterPatientAction($c->get(ServiceAuthInterface::class), $c->get(HATEOASService::class)),
+
+    RegisterPatientInputDataValidationMiddleware::class => fn(ContainerInterface $c) =>
+        new RegisterPatientInputDataValidationMiddleware($c->get(AuthRepositoryInterface::class)),
 
 ];

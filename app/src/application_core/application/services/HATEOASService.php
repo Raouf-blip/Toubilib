@@ -10,6 +10,11 @@ class HATEOASService
         $this->baseUrl = $_ENV['API_BASE_URL'] ?? 'http://localhost:6080';
     }
 
+    public function getBaseUrl(): string
+    {
+        return $this->baseUrl;
+    }
+
     /**
      * Génère les liens HATEOAS pour un praticien
      */

@@ -34,4 +34,23 @@ class PDOPatientRepository implements PatientRepositoryInterface
             $row['telephone']
         );
     }
+
+    public function save(Patient $patient): void
+    {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO patient (id, nom, prenom, date_naissance, adresse, code_postal, ville, email, telephone) 
+             VALUES (:id, :nom, :prenom, :date_naissance, :adresse, :code_postal, :ville, :email, :telephone)"
+        );
+        $stmt->execute([
+            'id' => $patient->getId(),
+            'nom' => $patient->getNom(),
+            'prenom' => $patient->getPrenom(),
+            'date_naissance' => $patient->getDateNaissance()?->format('Y-m-d'),
+            'adresse' => $patient->getAdresse(),
+            'code_postal' => $patient->getCodePostal(),
+            'ville' => $patient->getVille(),
+            'email' => $patient->getEmail(),
+            'telephone' => $patient->getTelephone()
+        ]);
+    }
 }

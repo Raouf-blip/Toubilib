@@ -106,9 +106,10 @@ return [
     ),
 
     ServiceAuthInterface::class =>
-    fn(ContainerInterface $c) => new ServiceAuth(
-        $c->get(AuthRepositoryInterface::class)
-    ),
+        fn(ContainerInterface $c) => new ServiceAuth(
+            $c->get(AuthRepositoryInterface::class),
+            $c->get(PatientRepositoryInterface::class)
+        ),
 
     JWTService::class => fn() => new JWTService(),
 
