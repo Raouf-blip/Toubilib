@@ -22,6 +22,12 @@ use toubilib\infra\repositories\PDORDVRepository;
 use toubilib\core\application\usecases\ServicePatient;
 use toubilib\core\application\usecases\ServicePatientInterface;
 use toubilib\core\application\services\HATEOASService;
+use toubilib\core\application\usecases\ServiceIndisponibiliteInterface;
+use toubilib\api\actions\CreateIndisponibiliteAction;
+use toubilib\api\actions\ListIndisponibilitesAction;
+use toubilib\api\actions\DeleteIndisponibiliteAction;
+use toubilib\api\middlewares\IndisponibiliteInputDataValidationMiddleware;
+use toubilib\api\middlewares\AuthZPraticienIndisponibiliteMiddleware;
 
 return [
 
@@ -46,7 +52,8 @@ return [
         return new ServiceRDV(
             $c->get(RDVRepositoryInterface::class),
             $c->get(ServicePraticienInterface::class),
-            $c->get(ServicePatientInterface::class)
+            $c->get(ServicePatientInterface::class),
+            $c->get(ServiceIndisponibiliteInterface::class)
         );
     },
 
@@ -86,5 +93,21 @@ return [
 
     RegisterPatientInputDataValidationMiddleware::class => fn(ContainerInterface $c) =>
         new RegisterPatientInputDataValidationMiddleware($c->get(AuthRepositoryInterface::class)),
+
+    // Feature 13: Indisponibilités
+    CreateIndisponibiliteAction::class => fn(ContainerInterface $c) =>
+        new CreateIndisponibiliteAction($c->get(ServiceIndisponibiliteInterface::class), $c->get(HATEOASService::class)),
+
+    ListIndisponibilitesAction::class => fn(ContainerInterface $c) =>
+        new ListIndisponibilitesAction($c->get(ServiceIndisponibiliteInterface::class), $c->get(HATEOASService::class)),
+
+    DeleteIndisponibiliteAction::class => fn(ContainerInterface $c) =>
+        new DeleteIndisponibiliteAction($c->get(ServiceIndisponibiliteInterface::class), $c->get(HATEOASService::class)),
+
+    IndisponibiliteInputDataValidationMiddleware::class => fn() =>
+        new IndisponibiliteInputDataValidationMiddleware(),
+
+    AuthZPraticienIndisponibiliteMiddleware::class => fn() =>
+        new AuthZPraticienIndisponibiliteMiddleware(),
 
 ];

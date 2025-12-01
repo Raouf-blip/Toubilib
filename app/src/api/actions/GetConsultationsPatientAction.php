@@ -34,14 +34,27 @@ class GetConsultationsPatientAction
         $data = [];
         foreach ($consultations as $consultation) {
             $praticien = $this->servicePraticien->RecherchePraticienByID($consultation->praticienId);
-            $data[] = [
-                'id' => $consultation->id,
-                'praticien' => [
+            
+            // Gérer le cas où le praticien n'existe plus (données orphelines)
+            if ($praticien === null) {
+                $praticienData = [
+                    'id' => $consultation->praticienId,
+                    'nom' => 'Non disponible',
+                    'prenom' => 'Non disponible',
+                    'specialite' => 'Non disponible'
+                ];
+            } else {
+                $praticienData = [
                     'id' => $praticien->id,
                     'nom' => $praticien->nom,
                     'prenom' => $praticien->prenom,
                     'specialite' => $praticien->specialite
-                ],
+                ];
+            }
+            
+            $data[] = [
+                'id' => $consultation->id,
+                'praticien' => $praticienData,
                 'dateHeureDebut' => $consultation->dateHeureDebut,
                 'dateHeureFin' => $consultation->dateHeureFin,
                 'motifVisite' => $consultation->motifVisite,
