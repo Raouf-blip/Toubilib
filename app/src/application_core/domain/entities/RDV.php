@@ -59,6 +59,10 @@ class RDV
             throw new Exception("Rendez-vous déjà marqué comme honoré");
         }
 
+        if ($this->status === 3) {
+            throw new Exception("Impossible de marquer un rendez-vous non honoré comme honoré");
+        }
+
         $now = new DateTime('now');
         
         // On peut marquer comme honoré seulement si le RDV est passé
@@ -73,6 +77,10 @@ class RDV
     {
         if ($this->status === 1) {
             throw new Exception("Impossible de marquer un rendez-vous annulé comme non honoré");
+        }
+
+        if ($this->status === 2) {
+            throw new Exception("Impossible de marquer un rendez-vous honoré comme non honoré");
         }
 
         if ($this->status === 3) {
