@@ -9,4 +9,5 @@ interface RDVRepositoryInterface
     public function findById(string $rdvId): ?RDV;
     public function save(RDV $rdv): void;
     public function updateStatus(string $rdvId, int $status): void;
+    public function findConsultationsByPatientId(string $patientId): array;
 }

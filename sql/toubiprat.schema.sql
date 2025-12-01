@@ -77,4 +77,16 @@ CREATE TABLE "public"."structure" (
 ) WITH (oids = false);
 
 
+DROP TABLE IF EXISTS "indisponibilite";
+CREATE TABLE "public"."indisponibilite" (
+    "id" uuid DEFAULT gen_random_uuid() NOT NULL,
+    "praticien_id" uuid NOT NULL,
+    "date_debut" timestamp NOT NULL,
+    "date_fin" timestamp NOT NULL,
+    "raison" character varying(256),
+    "date_creation" timestamp DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "indisponibilite_pkey" PRIMARY KEY ("id")
+) WITH (oids = false);
+
+
 -- 2025-06-30 12:31:32.033009+00

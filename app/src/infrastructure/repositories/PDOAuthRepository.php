@@ -30,4 +30,17 @@ class PDOAuthRepository implements AuthRepositoryInterface
             $row['role']
         );
     }
+
+    public function save(Auth $auth): void
+    {
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO users (id, email, password, role) VALUES (:id, :email, :password, :role)"
+        );
+        $stmt->execute([
+            'id' => $auth->getId(),
+            'email' => $auth->getEmail(),
+            'password' => $auth->getMdp(),
+            'role' => $auth->getRole()
+        ]);
+    }
 }

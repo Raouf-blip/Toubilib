@@ -30,6 +30,10 @@ use toubilib\api\middlewares\AuthZPraticienRDVMiddleware;
 use toubilib\api\middlewares\AuthZPraticienAgendaMiddleware;
 use toubilib\api\middlewares\CORSMiddleware;
 use toubilib\core\application\services\HATEOASService;
+use toubilib\core\application\ports\IndisponibiliteRepositoryInterface;
+use toubilib\infra\repositories\PDOIndisponibiliteRepository;
+use toubilib\core\application\usecases\ServiceIndisponibilite;
+use toubilib\core\application\usecases\ServiceIndisponibiliteInterface;
 
 return [
 
@@ -91,6 +95,9 @@ return [
     AuthRepositoryInterface::class =>
     fn(ContainerInterface $c) => new PDOAuthRepository($c->get('pdo.auth')),
 
+    IndisponibiliteRepositoryInterface::class =>
+    fn(ContainerInterface $c) => new PDOIndisponibiliteRepository($c->get('pdo.praticien')),
+
     // services
     ServicePraticienInterface::class =>
     fn(ContainerInterface $c) => new ServicePraticien($c->get(PraticienRepositoryInterface::class)),
@@ -105,13 +112,21 @@ return [
     fn(ContainerInterface $c) => new ServiceRDV(
         $c->get(RDVRepositoryInterface::class),
         $c->get(ServicePraticienInterface::class),
-        $c->get(ServicePatient::class)
+        $c->get(ServicePatient::class),
+        $c->get(ServiceIndisponibiliteInterface::class)
     ),
 
     ServiceAuthInterface::class =>
-    fn(ContainerInterface $c) => new ServiceAuth(
-        $c->get(AuthRepositoryInterface::class)
-    ),
+        fn(ContainerInterface $c) => new ServiceAuth(
+            $c->get(AuthRepositoryInterface::class),
+            $c->get(PatientRepositoryInterface::class)
+        ),
+
+    ServiceIndisponibiliteInterface::class =>
+        fn(ContainerInterface $c) => new ServiceIndisponibilite(
+            $c->get(IndisponibiliteRepositoryInterface::class),
+            $c->get(PraticienRepositoryInterface::class)
+        ),
 
     JWTService::class => fn() => new JWTService(),
 
@@ -126,6 +141,8 @@ return [
     AuthZPraticienRDVMiddleware::class => fn(ContainerInterface $c) => new AuthZPraticienRDVMiddleware($c->get(ServiceRDVInterface::class)),
 
     AuthZPraticienAgendaMiddleware::class => fn() => new AuthZPraticienAgendaMiddleware(),
+
+    AuthZPraticienIndisponibiliteMiddleware::class => fn() => new \toubilib\api\middlewares\AuthZPraticienIndisponibiliteMiddleware(),
 
     CORSMiddleware::class => fn() => new CORSMiddleware(),
 

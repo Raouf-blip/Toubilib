@@ -4,6 +4,7 @@ use Psr\Container\ContainerInterface;
 use toubilib\api\actions\AgendaPraticienAction;
 use toubilib\api\actions\ListPraticiensAction;
 use toubilib\api\actions\RecherchePraticiensAction;
+use toubilib\api\actions\RecherchePraticiensSpeVilleAction;
 use toubilib\core\application\usecases\ServicePraticienInterface;
 use toubilib\api\actions\ListRDVOccupesAction;
 use toubilib\core\application\usecases\ServiceRDVInterface;
@@ -11,11 +12,22 @@ use toubilib\core\application\usecases\ServiceRDV;
 use toubilib\api\actions\GetRDVAction;
 use toubilib\api\actions\CreateRDVAction;
 use toubilib\api\actions\GetPatientAction;
+use toubilib\api\actions\GetConsultationsPatientAction;
+use toubilib\api\actions\RegisterPatientAction;
+use toubilib\api\middlewares\RegisterPatientInputDataValidationMiddleware;
 use toubilib\core\application\ports\RDVRepositoryInterface;
+use toubilib\core\application\ports\AuthRepositoryInterface;
+use toubilib\core\application\usecases\ServiceAuthInterface;
 use toubilib\infra\repositories\PDORDVRepository;
 use toubilib\core\application\usecases\ServicePatient;
 use toubilib\core\application\usecases\ServicePatientInterface;
 use toubilib\core\application\services\HATEOASService;
+use toubilib\core\application\usecases\ServiceIndisponibiliteInterface;
+use toubilib\api\actions\CreateIndisponibiliteAction;
+use toubilib\api\actions\ListIndisponibilitesAction;
+use toubilib\api\actions\DeleteIndisponibiliteAction;
+use toubilib\api\middlewares\IndisponibiliteInputDataValidationMiddleware;
+use toubilib\api\middlewares\AuthZPraticienIndisponibiliteMiddleware;
 
 return [
 
@@ -40,7 +52,8 @@ return [
         return new ServiceRDV(
             $c->get(RDVRepositoryInterface::class),
             $c->get(ServicePraticienInterface::class),
-            $c->get(ServicePatientInterface::class)
+            $c->get(ServicePatientInterface::class),
+            $c->get(ServiceIndisponibiliteInterface::class)
         );
     },
 
@@ -53,6 +66,9 @@ return [
 
     CreateRDVAction::class => fn(ContainerInterface $c) =>
         new CreateRDVAction($c->get(ServiceRDVInterface::class)),
+    
+    GetConsultationsPatientAction::class => fn(ContainerInterface $c) =>
+        new GetConsultationsPatientAction($c->get(ServiceRDVInterface::class), $c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),
 
     // Actions praticiens
     ListPraticiensAction::class => fn(ContainerInterface $c) =>
@@ -61,10 +77,37 @@ return [
     RecherchePraticiensAction::class => fn(ContainerInterface $c) =>
         new RecherchePraticiensAction($c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),
     
+    RecherchePraticiensSpeVilleAction::class => fn(ContainerInterface $c) =>
+        new RecherchePraticiensSpeVilleAction($c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),
+
     AgendaPraticienAction::class => fn(ContainerInterface $c) =>
         new AgendaPraticienAction($c->get(ServiceRDVInterface::class)),
 
     // Actions patients
     GetPatientAction::class => fn(ContainerInterface $c) =>
         new GetPatientAction($c->get(ServicePatientInterface::class)),
+
+    // Feature 12: Inscription patient
+    RegisterPatientAction::class => fn(ContainerInterface $c) =>
+        new RegisterPatientAction($c->get(ServiceAuthInterface::class), $c->get(HATEOASService::class)),
+
+    RegisterPatientInputDataValidationMiddleware::class => fn(ContainerInterface $c) =>
+        new RegisterPatientInputDataValidationMiddleware($c->get(AuthRepositoryInterface::class)),
+
+    // Feature 13: Indisponibilités
+    CreateIndisponibiliteAction::class => fn(ContainerInterface $c) =>
+        new CreateIndisponibiliteAction($c->get(ServiceIndisponibiliteInterface::class), $c->get(HATEOASService::class)),
+
+    ListIndisponibilitesAction::class => fn(ContainerInterface $c) =>
+        new ListIndisponibilitesAction($c->get(ServiceIndisponibiliteInterface::class), $c->get(HATEOASService::class)),
+
+    DeleteIndisponibiliteAction::class => fn(ContainerInterface $c) =>
+        new DeleteIndisponibiliteAction($c->get(ServiceIndisponibiliteInterface::class), $c->get(HATEOASService::class)),
+
+    IndisponibiliteInputDataValidationMiddleware::class => fn() =>
+        new IndisponibiliteInputDataValidationMiddleware(),
+
+    AuthZPraticienIndisponibiliteMiddleware::class => fn() =>
+        new AuthZPraticienIndisponibiliteMiddleware(),
+
 ];

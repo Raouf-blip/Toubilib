@@ -72,6 +72,50 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
         return $praticien;
     }
 
+    public function findBySpecialiteAndVille(?string $specialiteLibelle, ?string $ville): array
+    {
+        $sql = "SELECT p.id, p.nom, p.prenom, p.ville, p.email, p.telephone, s.id as specialite_id, s.libelle as specialite_libelle
+                FROM praticien p
+                JOIN specialite s ON p.specialite_id = s.id";
+        $conditions = [];
+        $params = [];
+
+        if ($specialiteLibelle !== null && $specialiteLibelle !== '') {
+            $conditions[] = "s.libelle ILIKE :spec";
+            $params['spec'] = '%' . $specialiteLibelle . '%';
+        }
+
+        if ($ville !== null && $ville !== '') {
+            $conditions[] = "p.ville ILIKE :ville";
+            $params['ville'] = '%' . $ville . '%';
+        }
+
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+
+        $sql .= " ORDER BY p.nom, p.prenom";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $praticiens = [];
+        foreach ($rows as $row) {
+            $specialite = new Specialite($row['specialite_id'], $row['specialite_libelle']);
+            $praticiens[] = new Praticien(
+                $row['id'],
+                $row['nom'],
+                $row['prenom'],
+                $row['ville'],
+                $row['email'],
+                $specialite,
+                $row['telephone']
+            );
+        }
+        return $praticiens;
+    }
+
     public function getMotifsVisite(string $praticienId): array
     {
         $sql = "SELECT mv.libelle

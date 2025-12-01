@@ -14,4 +14,5 @@ interface ServiceRDVInterface
     public function marquerCommeHonore(string $rdvId): void;
     public function marquerCommeNonHonore(string $rdvId): void;
     public function getAgendaPraticien(string $praticienId, ?\DateTime $dateDebut = null, ?\DateTime $dateFin = null): array;
+    public function listerConsultationsPatient(string $patientid): array;
 }

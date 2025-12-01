@@ -5,6 +5,7 @@ use toubilib\core\application\ports\RDVRepositoryInterface;
 use toubilib\core\application\dto\InputRDVDTO;
 use toubilib\core\domain\entities\RDV;
 use toubilib\core\application\dto\RDVDTO;
+use toubilib\core\application\usecases\ServiceIndisponibiliteInterface;
 use DateTime;
 use Exception;
 use Ramsey\Uuid\Uuid;
@@ -14,15 +15,18 @@ class ServiceRDV implements ServiceRDVInterface
     private RDVRepositoryInterface $rdvRepository;
     private ServicePraticienInterface $servicePraticien;
     private ServicePatientInterface $servicePatient;
+    private ServiceIndisponibiliteInterface $serviceIndisponibilite;
 
     public function __construct(
         RDVRepositoryInterface $rdvRepository,
         ServicePraticienInterface $servicePraticien,
-        ServicePatientInterface $servicePatient
+        ServicePatientInterface $servicePatient,
+        ServiceIndisponibiliteInterface $serviceIndisponibilite
     ) {
         $this->rdvRepository = $rdvRepository;
         $this->servicePraticien = $servicePraticien;
         $this->servicePatient = $servicePatient;
+        $this->serviceIndisponibilite = $serviceIndisponibilite;
     }
 
     public function listerCreneauxOccupes(string $praticienId, DateTime $debut, DateTime $fin): array
@@ -99,11 +103,18 @@ class ServiceRDV implements ServiceRDVInterface
             throw new Exception("Créneau horaire invalide (lun-ven 08:00-19:00)");
         }
 
+        // Vérifier les créneaux occupés (RDV existants)
         $creneauxOccupes = $this->rdvRepository->findBusySlots($dto->praticienId, $debut, $fin);
         foreach ($creneauxOccupes as $existing) {
             if ($existing->getDateHeureDebut() < $fin && $existing->getDateHeureFin() > $debut) {
                 throw new Exception("Praticien déjà occupé sur ce créneau");
             }
+        }
+
+        // Vérifier les indisponibilités
+        $indisponibilites = $this->serviceIndisponibilite->trouverIndisponibilitesChevauchantes($dto->praticienId, $debut, $fin);
+        if (!empty($indisponibilites)) {
+            throw new Exception("Praticien indisponible sur ce créneau");
         }
 
         $rdv = new RDV(
@@ -185,5 +196,25 @@ class ServiceRDV implements ServiceRDVInterface
         return $agenda;
     }
 
+    public function listerConsultationsPatient(string $id): array
+    {
+        $consultations = $this->rdvRepository->findConsultationsByPatientId($id);
+        $praticienDTOs = [];
+        foreach ($consultations as $consultation) {
+            $praticienDTOs[] = new RDVDTO(
+                $consultation->getId(),
+                $consultation->getPraticienId(),
+                $consultation->getPatientId(),
+                $consultation->getPatientEmail(),
+                $consultation->getDateHeureDebut()->format('Y-m-d H:i:s'),
+                $consultation->getDateHeureFin()?->format('Y-m-d H:i:s'),
+                $consultation->getStatus(),
+                $consultation->getDuree(),
+                $consultation->getDateCreation()?->format('Y-m-d H:i:s'),
+                $consultation->getMotifVisite()
+            );
+        }
+        return $praticienDTOs;
+    }
 
 }
