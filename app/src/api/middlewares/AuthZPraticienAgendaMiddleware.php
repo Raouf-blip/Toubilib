@@ -27,20 +27,20 @@ class AuthZPraticienAgendaMiddleware implements MiddlewareInterface
 
         if (!$user || $user['role'] !== 10) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Accès réservé aux praticiens']));
+            $response->getBody()->write(json_encode(['error' => 'Accès réservé aux praticiens'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
         }
 
         if (!$praticienId) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'ID praticien manquant']));
+            $response->getBody()->write(json_encode(['error' => 'ID praticien manquant'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         // Vérifier que le praticien authentifié est le propriétaire de l'agenda
         if ($user['id'] !== $praticienId) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Accès non autorisé à cet agenda']));
+            $response->getBody()->write(json_encode(['error' => 'Accès non autorisé à cet agenda'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
         }
 

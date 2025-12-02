@@ -13,7 +13,7 @@ class AuthZPraticienMiddleware implements MiddlewareInterface
         $user = $request->getAttribute('user');
         if (!$user || $user['role'] !== 10) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Accès réservé aux praticiens']));
+            $response->getBody()->write(json_encode(['error' => 'Accès réservé aux praticiens'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
         }
 

@@ -15,6 +15,10 @@ class Praticien
     public ?string $adresse;
     public ?string $codePostal;
     public ?string $structureVille;
+    public ?string $rppsId;
+    public string $titre;
+    public bool $accepteNouveauPatient;
+    public bool $estOrganisation;
 
     public function __construct(
         string $id, 
@@ -27,7 +31,11 @@ class Praticien
         ?string $structureNom = null,
         ?string $adresse = null,
         ?string $codePostal = null,
-        ?string $structureVille = null
+        ?string $structureVille = null,
+        ?string $rppsId = null,
+        string $titre = 'Dr.',
+        bool $accepteNouveauPatient = true,
+        bool $estOrganisation = false
     ) {
         $this->id = $id;
         $this->nom = $nom;
@@ -40,6 +48,10 @@ class Praticien
         $this->adresse = $adresse;
         $this->codePostal = $codePostal;
         $this->structureVille = $structureVille;
+        $this->rppsId = $rppsId;
+        $this->titre = $titre;
+        $this->accepteNouveauPatient = $accepteNouveauPatient;
+        $this->estOrganisation = $estOrganisation;
     }
 
     public function getId(): string
@@ -95,6 +107,26 @@ class Praticien
     public function getStructureVille(): ?string
     {
         return $this->structureVille;
+    }
+
+    public function getRppsId(): ?string
+    {
+        return $this->rppsId;
+    }
+
+    public function getTitre(): string
+    {
+        return $this->titre;
+    }
+
+    public function getAccepteNouveauPatient(): bool
+    {
+        return $this->accepteNouveauPatient;
+    }
+
+    public function getEstOrganisation(): bool
+    {
+        return $this->estOrganisation;
     }
 
 }

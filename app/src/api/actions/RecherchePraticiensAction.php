@@ -59,6 +59,10 @@ class RecherchePraticiensAction
                 'adresse' => $praticien->adresse,
                 'codePostal' => $praticien->codePostal,
                 'structureVille' => $praticien->structureVille,
+                'rppsId' => $praticien->rppsId,
+                'titre' => $praticien->titre,
+                'accepteNouveauPatient' => $praticien->accepteNouveauPatient,
+                'estOrganisation' => $praticien->estOrganisation,
                 'motifsVisite' => $praticien->motifsVisite,
                 'moyensPaiement' => $praticien->moyensPaiement,
                 '_links' => $this->hateoasService->getPraticienLinks($praticien->id)

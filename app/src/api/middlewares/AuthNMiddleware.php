@@ -21,7 +21,7 @@ class AuthNMiddleware implements MiddlewareInterface
         $authHeader = $request->getHeaderLine('Authorization');
         if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Token d\'authentification manquant']));
+            $response->getBody()->write(json_encode(['error' => 'Token d\'authentification manquant'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
 
@@ -37,7 +37,7 @@ class AuthNMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         } catch (\Exception $e) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Token invalide']));
+            $response->getBody()->write(json_encode(['error' => 'Token invalide'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(401)->withHeader('Content-Type', 'application/json');
         }
     }

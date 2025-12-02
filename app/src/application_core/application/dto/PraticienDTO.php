@@ -17,6 +17,10 @@ class PraticienDTO
     public ?string $adresse;
     public ?string $codePostal;
     public ?string $structureVille;
+    public ?string $rppsId;
+    public string $titre;
+    public bool $accepteNouveauPatient;
+    public bool $estOrganisation;
     public array $motifsVisite;
     public array $moyensPaiement;
 
@@ -33,6 +37,10 @@ class PraticienDTO
         $this->adresse = $praticien->adresse;
         $this->codePostal = $praticien->codePostal;
         $this->structureVille = $praticien->structureVille;
+        $this->rppsId = $praticien->rppsId;
+        $this->titre = $praticien->titre;
+        $this->accepteNouveauPatient = $praticien->accepteNouveauPatient;
+        $this->estOrganisation = $praticien->estOrganisation;
         $this->motifsVisite = $motifsVisite;
         $this->moyensPaiement = $moyensPaiement;
     }
