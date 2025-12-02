@@ -21,13 +21,13 @@ class GetRDVAction
     {
         $rdvId = $args['id'] ?? null;
         if (!$rdvId) {
-            $response->getBody()->write(json_encode(['error' => 'ID manquant']));
+            $response->getBody()->write(json_encode(['error' => 'ID manquant'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         $rdv = $this->serviceRDV->consulterRdv($rdvId);
         if (!$rdv) {
-            $response->getBody()->write(json_encode(['error' => 'RDV non trouvé']));
+            $response->getBody()->write(json_encode(['error' => 'RDV non trouvé'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 

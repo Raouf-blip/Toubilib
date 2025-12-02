@@ -19,7 +19,7 @@ class MarquerRDVNonHonoreAction
         $rdvId = $args['id'] ?? null;
 
         if (!$rdvId) {
-            $response->getBody()->write(json_encode(['error' => 'ID manquant']));
+            $response->getBody()->write(json_encode(['error' => 'ID manquant'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
@@ -38,7 +38,7 @@ class MarquerRDVNonHonoreAction
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $response->getBody()->write(json_encode(['message' => 'Rendez-vous marqué comme non honoré']));
+        $response->getBody()->write(json_encode(['message' => 'Rendez-vous marqué comme non honoré'], JSON_UNESCAPED_UNICODE));
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
 }

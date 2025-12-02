@@ -42,10 +42,13 @@ class RecherchePraticiensSpeVilleAction
             ];
         }
 
-        $response->getBody()->write(json_encode([
+        $responseData = [
             'status' => 'success',
-            'data' => $out
-        ], JSON_UNESCAPED_UNICODE));
+            'data' => $out,
+            '_links' => $this->hateoasService->getPraticiensListLinks()
+        ];
+        
+        $response->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE));
 
         return $response
             ->withHeader('Content-Type', 'application/json')

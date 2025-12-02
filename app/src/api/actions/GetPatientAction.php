@@ -18,13 +18,13 @@ class GetPatientAction
     {
         $patientId = $args['id'] ?? null;
         if (!$patientId) {
-            $response->getBody()->write(json_encode(['error' => 'ID manquant']));
+            $response->getBody()->write(json_encode(['error' => 'ID manquant'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         $patient = $this->servicePatient->consulterPatient($patientId);
         if (!$patient) {
-            $response->getBody()->write(json_encode(['error' => 'Patient non trouvé']));
+            $response->getBody()->write(json_encode(['error' => 'Patient non trouvé'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
@@ -38,7 +38,7 @@ class GetPatientAction
             'ville' => $patient->getVille(),
             'email' => $patient->getEmail(),
             'telephone' => $patient->getTelephone()
-        ], JSON_UNESCAPED_SLASHES));
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }

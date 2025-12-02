@@ -26,7 +26,7 @@ class RecherchePraticiensAction
             $response->getBody()->write(json_encode([
                 'status' => 'error',
                 'message' => 'ID du praticien requis'
-            ]));
+            ], JSON_UNESCAPED_UNICODE));
 
             return $response
                 ->withHeader('Content-Type', 'application/json')
@@ -39,7 +39,7 @@ class RecherchePraticiensAction
             $response->getBody()->write(json_encode([
                 'status' => 'error',
                 'message' => 'Praticien non trouvé'
-            ]));
+            ], JSON_UNESCAPED_UNICODE));
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(404);

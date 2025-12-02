@@ -26,11 +26,11 @@ class AnnulerRDVAction
         try {
             $this->serviceRDV->annulerRendezVous($rdvId);
         } catch (\Exception $e) {
-            $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
+            $response->getBody()->write(json_encode(['error' => $e->getMessage()], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
-        $response->getBody()->write(json_encode(['message' => 'Rendez-vous annulé']));
+        $response->getBody()->write(json_encode(['message' => 'Rendez-vous annulé'], JSON_UNESCAPED_UNICODE));
         return $response->withStatus(202)->withHeader('Content-Type', 'application/json');
     }
 }

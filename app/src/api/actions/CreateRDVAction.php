@@ -20,7 +20,7 @@ class CreateRDVAction
         $dto = $request->getAttribute('inputRdvDto');
         if (! $dto) {
             $res = new SlimResponse();
-            $res->getBody()->write(json_encode(['error' => 'Input DTO manquant (middleware absent?)']));
+            $res->getBody()->write(json_encode(['error' => 'Input DTO manquant (middleware absent?)'], JSON_UNESCAPED_UNICODE));
             return $res->withHeader('Content-Type', 'application/json')->withStatus(500);
         }
 

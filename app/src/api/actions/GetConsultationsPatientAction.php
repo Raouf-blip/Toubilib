@@ -25,7 +25,7 @@ class GetConsultationsPatientAction
     {
         $patientId = $args['id'] ?? null;
         if (!$patientId) {
-            $response->getBody()->write(json_encode(['error' => 'ID manquant']));
+            $response->getBody()->write(json_encode(['error' => 'ID manquant'], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 

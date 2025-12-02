@@ -38,7 +38,7 @@ class DeleteIndisponibiliteAction
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(204);
         } catch (\Exception $e) {
-            $statusCode = 404;
+            $statusCode = 400;
             if (strpos($e->getMessage(), 'inexistant') !== false) {
                 $statusCode = 404;
             }
