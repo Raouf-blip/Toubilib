@@ -9,10 +9,12 @@ https://github.com/Raouf-blip/Toubilib
 ## Installation et Lancement
 
 ### Prérequis
+
 - Docker et Docker Compose
 - Git
 
 ### Installation
+
 ```bash
 git clone https://github.com/Raouf-blip/Toubilib
 cd Toubilib
@@ -23,6 +25,7 @@ docker-compose up -d
 ```
 
 ### Vérification
+
 ```bash
 curl http://localhost:6080/
 ```
@@ -32,12 +35,12 @@ L'API répondra avec la liste de tous les endpoints disponibles.
 ## Comptes de Test
 
 **Patients (role=1):**
+
 - Email: `Denis.Teixeira@hotmail.fr` / Mot de passe: `test`
-- Email: `Marie.Guichard@sfr.fr` / Mot de passe: `test`
 
 **Praticiens (role=10):**
+
 - Email: `dith.Didier@club-internet.fr` / Mot de passe: `test`
-- Email: `radio.plus@sante.fr` / Mot de passe: `test`
 
 ### Exemple d'utilisation
 
@@ -72,21 +75,21 @@ curl -X POST http://localhost:6080/rdvs \
 
 ## Fonctionnalités Implémentées
 
-| # | Fonctionnalité | Endpoint | Statut |
-|---|----------------|----------|--------|
-| 1 | Lister les praticiens | `GET /praticiens` | OK |
-| 2 | Détail praticien | `GET /praticiens/{id}` | OK |
-| 3 | Créneaux occupés | `GET /praticiens/{id}/rdvs/occupes?dateDebut=...&dateFin=...` | OK |
-| 4 | Consulter RDV | `GET /rdvs/{id}` | OK |
-| 5 | Réserver RDV | `POST /rdvs` | OK |
-| 6 | Annuler RDV | `DELETE /rdvs/{id}` | OK |
-| 7 | Agenda praticien | `GET /praticiens/{id}/agenda?dateDebut=...&dateFin=...` | OK |
-| 8 | Authentification | `POST /auth/login` | OK |
-| 9 | Recherche praticiens | `GET /praticiens/search?specialite=...&ville=...` | OK |
-| 10 | Marquer RDV honoré/non honoré | `PATCH /rdvs/{id}/honorer` / `PATCH /rdvs/{id}/non-honorer` | OK |
-| 11 | Historique consultations patient | `GET /patients/{id}/consultations` | OK |
-| 12 | Inscription patient | `POST /auth/register` | OK |
-| 13 | Gestion indisponibilités | `POST /praticiens/{id}/indisponibilites`<br>`GET /praticiens/{id}/indisponibilites`<br>`DELETE /praticiens/{id}/indisponibilites/{indisponibiliteId}` | OK |
+| #  | Fonctionnalité                  | Endpoint                                                                                                                                                | Statut |
+| -- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 1  | Lister les praticiens            | `GET /praticiens`                                                                                                                                     | OK     |
+| 2  | Détail praticien                | `GET /praticiens/{id}`                                                                                                                                | OK     |
+| 3  | Créneaux occupés               | `GET /praticiens/{id}/rdvs/occupes?dateDebut=...&dateFin=...`                                                                                         | OK     |
+| 4  | Consulter RDV                    | `GET /rdvs/{id}`                                                                                                                                      | OK     |
+| 5  | Réserver RDV                    | `POST /rdvs`                                                                                                                                          | OK     |
+| 6  | Annuler RDV                      | `DELETE /rdvs/{id}`                                                                                                                                   | OK     |
+| 7  | Agenda praticien                 | `GET /praticiens/{id}/agenda?dateDebut=...&dateFin=...`                                                                                               | OK     |
+| 8  | Authentification                 | `POST /auth/login`                                                                                                                                    | OK     |
+| 9  | Recherche praticiens             | `GET /praticiens/search?specialite=...&ville=...`                                                                                                     | OK     |
+| 10 | Marquer RDV honoré/non honoré  | `PATCH /rdvs/{id}/honorer` / `PATCH /rdvs/{id}/non-honorer`                                                                                         | OK     |
+| 11 | Historique consultations patient | `GET /patients/{id}/consultations`                                                                                                                    | OK     |
+| 12 | Inscription patient              | `POST /auth/register`                                                                                                                                 | OK     |
+| 13 | Gestion indisponibilités        | `POST /praticiens/{id}/indisponibilites<br>``GET /praticiens/{id}/indisponibilites<br>``DELETE /praticiens/{id}/indisponibilites/{indisponibiliteId}` | OK     |
 
 ## Architecture
 
@@ -109,29 +112,14 @@ app/
 └── public/              # Point d'entrée de l'application
 ```
 
-## Configuration
-
-### Variables d'environnement
-
-Le fichier `.env` doit être créé à partir de `.env.dist` et contient :
-- **JWT_SECRET** : Clé secrète pour la génération des tokens JWT
-- **DB_*** : Configuration des connexions aux bases de données
-
-### Bases de données
-
-L'application utilise 4 bases PostgreSQL distinctes :
-- **toubiauth** (port 5433) : Authentification et utilisateurs
-- **toubipat** (port 5435) : Données des patients
-- **toubiprat** (port 5432) : Données des praticiens
-- **toubirdv** (port 5434) : Rendez-vous et indisponibilités
-
 ### Accès aux bases de données
 
 Un service Adminer est disponible sur `http://localhost:8080` pour gérer les bases de données.
 
-## Tableau de Bord des Réalisations
+## Tableau de Bord
 
 ### Fonctionnalités Implémentées
+
 - Architecture hexagonale + inversion de dépendances
 - API RESTful (URIs, méthodes HTTP, status codes, JSON, HATEOAS)
 - Authentification JWT + middlewares d'autorisation
@@ -142,26 +130,16 @@ Un service Adminer est disponible sur `http://localhost:8080` pour gérer les ba
 
 ### Réalisations par Membre du Groupe
 
-| Membre | Contributions Principales |
-|--------|---------------------------|
-| **Noah** | Architecture hexagonale, Authentification JWT, Middlewares |
-| **Noah, Arman** | API RESTful, Validation des données, HATEOAS |
-| **Noah** | Bases de données, Docker, Tests fonctionnels |
-| **Léo** | Home, Authentification |
-| **Raouf** | Lister les praticiens, Détail praticien, Créneaux occupés, Consulter RDV, Réserver RDV, Annuler RDV, Agenda praticien |
-| **Arman** | Détail praticien, Status, HATEOAS |
-
-### Branches
-
-| Membre | Branche |
-|--------|---------------------------|
-| **Raouf, Noah, Léo, Arman** | Main |
-| **Arman** | Lien-Hateoas |
-| **Léo** | Authentification |
+| Membre                | Contributions Principales                                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **Noah**        | Architecture hexagonale, Authentification JWT, Middlewares                                                                |
+| **Noah, Arman** | API RESTful, Validation des données, HATEOAS                                                                             |
+| **Noah**        | Bases de données, Docker                                                                                                 |
+| **Léo**        | Home, Authentification                                                                                                    |
+| **Raouf**       | Lister les praticiens, Détail praticien, Créneaux occupés, Consulter RDV, Réserver RDV, Annuler RDV, Agenda praticien |
+| **Arman**       | Détail praticien, Status, HATEOAS                                                                                        |
 
 ## Notes importantes
 
 - Tous les endpoints nécessitant une authentification requièrent un header : `Authorization: Bearer {token}`
 - Les tokens JWT expirent après 1 heure
-- Les réponses JSON utilisent l'encodage UTF-8 sans échappement (`JSON_UNESCAPED_UNICODE`)
-- Toutes les réponses incluent des liens HATEOAS pour la navigation dans l'API
