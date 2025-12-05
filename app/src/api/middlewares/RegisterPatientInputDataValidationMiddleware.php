@@ -5,12 +5,11 @@ namespace toubilib\api\middlewares;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Psr\Http\Server\MiddlewareInterface;
 use Slim\Psr7\Response as SlimResponse;
 use toubilib\core\application\dto\InputRegisterPatientDTO;
 use toubilib\core\application\ports\AuthRepositoryInterface;
 
-class RegisterPatientInputDataValidationMiddleware implements MiddlewareInterface
+class RegisterPatientInputDataValidationMiddleware
 {
     private AuthRepositoryInterface $authRepository;
 
@@ -19,7 +18,7 @@ class RegisterPatientInputDataValidationMiddleware implements MiddlewareInterfac
         $this->authRepository = $authRepository;
     }
 
-    public function process(Request $request, RequestHandler $handler): Response
+    public function __invoke(Request $request, RequestHandler $handler): Response
     {
         $data = (array)$request->getParsedBody();
 

@@ -65,7 +65,7 @@ return [
         new GetRDVAction($c->get(ServiceRDVInterface::class), $c->get(HATEOASService::class)),
 
     CreateRDVAction::class => fn(ContainerInterface $c) =>
-        new CreateRDVAction($c->get(ServiceRDVInterface::class)),
+        new CreateRDVAction($c->get(ServiceRDVInterface::class), $c->get(HATEOASService::class)),
     
     GetConsultationsPatientAction::class => fn(ContainerInterface $c) =>
         new GetConsultationsPatientAction($c->get(ServiceRDVInterface::class), $c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),

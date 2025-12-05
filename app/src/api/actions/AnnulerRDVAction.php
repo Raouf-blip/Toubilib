@@ -33,24 +33,30 @@ class AnnulerRDVAction
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
-        // Récupérer le RDV pour obtenir les IDs nécessaires aux liens
-        $rdv = $this->serviceRDV->consulterRdv($rdvId);
+        // Récupérer le RDV pour obtenir les IDs nécessaires aux liens supplémentaires
+        // Si cette récupération échoue, on retourne quand même une réponse de succès avec les liens de base
         $responseData = [
             'message' => 'Rendez-vous annulé',
             '_links' => $this->hateoasService->getRDVLinks($rdvId)
         ];
         
-        if ($rdv) {
-            $responseData['_links']['praticien'] = [
-                'href' => "{$this->hateoasService->getBaseUrl()}/praticiens/{$rdv->praticienId}",
-                'method' => 'GET',
-                'description' => 'Détails du praticien'
-            ];
-            $responseData['_links']['patient'] = [
-                'href' => "{$this->hateoasService->getBaseUrl()}/patients/{$rdv->patientId}",
-                'method' => 'GET',
-                'description' => 'Détails du patient'
-            ];
+        try {
+            $rdv = $this->serviceRDV->consulterRdv($rdvId);
+            if ($rdv) {
+                $responseData['_links']['praticien'] = [
+                    'href' => "{$this->hateoasService->getBaseUrl()}/praticiens/{$rdv->praticienId}",
+                    'method' => 'GET',
+                    'description' => 'Détails du praticien'
+                ];
+                $responseData['_links']['patient'] = [
+                    'href' => "{$this->hateoasService->getBaseUrl()}/patients/{$rdv->patientId}",
+                    'method' => 'GET',
+                    'description' => 'Détails du patient'
+                ];
+            }
+        } catch (\Exception $e) {
+            // Si la récupération du RDV échoue, on continue avec les liens de base uniquement
+            // L'annulation a réussi, donc on retourne quand même une réponse de succès
         }
         
         $response->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE));

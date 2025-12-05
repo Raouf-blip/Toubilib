@@ -41,8 +41,8 @@ class Patient
     public function getDateNaissance(): ?\DateTime { return $this->dateNaissance; }
     public function getEmail(): ?string { return $this->email; }
     public function getTelephone(): string { return $this->telephone; }
-    public function getAdresse(): string {return $this->adresse;}
-    public function getCodePostal(): string {return $this->codePostal;}
-    public function getVille(): string{return $this->ville;}
+    public function getAdresse(): ?string {return $this->adresse;}
+    public function getCodePostal(): ?string {return $this->codePostal;}
+    public function getVille(): ?string{return $this->ville;}
 
 }

@@ -5,13 +5,12 @@ namespace toubilib\api\middlewares;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Psr\Http\Server\MiddlewareInterface;
 use Slim\Psr7\Response as SlimResponse;
 use toubilib\core\application\dto\InputIndisponibiliteDTO;
 
-class IndisponibiliteInputDataValidationMiddleware implements MiddlewareInterface
+class IndisponibiliteInputDataValidationMiddleware
 {
-    public function process(Request $request, RequestHandler $handler): Response
+    public function __invoke(Request $request, RequestHandler $handler): Response
     {
         $data = (array)$request->getParsedBody();
         

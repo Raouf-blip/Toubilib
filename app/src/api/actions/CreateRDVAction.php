@@ -4,15 +4,18 @@ namespace toubilib\api\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\usecases\ServiceRDVInterface;
+use toubilib\core\application\services\HATEOASService;
 use Slim\Psr7\Response as SlimResponse;
 
 class CreateRDVAction
 {
     private ServiceRDVInterface $serviceRDV;
+    private HATEOASService $hateoasService;
 
-    public function __construct(ServiceRDVInterface $serviceRDV)
+    public function __construct(ServiceRDVInterface $serviceRDV, HATEOASService $hateoasService)
     {
         $this->serviceRDV = $serviceRDV;
+        $this->hateoasService = $hateoasService;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -37,7 +40,8 @@ class CreateRDVAction
                 'duree' => $rdv->getDuree(),
                 'motifVisite' => $rdv->getMotifVisite(),
                 'dateCreation' => $rdv->getDateCreation() ? $rdv->getDateCreation()->format('Y-m-d H:i:s') : null,
-                'status' => $rdv->getStatus()
+                'status' => $rdv->getStatus(),
+                '_links' => $this->hateoasService->getRDVLinks($rdv->getId())
             ];
 
             $res = new SlimResponse();
