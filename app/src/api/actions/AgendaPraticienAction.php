@@ -4,14 +4,17 @@ namespace toubilib\api\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\usecases\ServiceRDVInterface;
+use toubilib\core\application\services\HATEOASService;
 
 class AgendaPraticienAction
 {
     private ServiceRDVInterface $serviceRDV;
+    private HATEOASService $hateoasService;
 
-    public function __construct(ServiceRDVInterface $serviceRDV)
+    public function __construct(ServiceRDVInterface $serviceRDV, HATEOASService $hateoasService)
     {
         $this->serviceRDV = $serviceRDV;
+        $this->hateoasService = $hateoasService;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -40,8 +43,13 @@ class AgendaPraticienAction
         }
 
         $agenda = $this->serviceRDV->getAgendaPraticien($praticienId, $dateDebut, $dateFin);
+        
+        $responseData = [
+            'agenda' => $agenda,
+            '_links' => $this->hateoasService->getAgendaLinks($praticienId)
+        ];
 
-        $response->getBody()->write(json_encode($agenda, JSON_UNESCAPED_UNICODE));
+        $response->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE));
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
 }

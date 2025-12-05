@@ -4,14 +4,17 @@ namespace toubilib\api\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\usecases\ServicePatient;
+use toubilib\core\application\services\HATEOASService;
 
 class GetPatientAction
 {
     private ServicePatient $servicePatient;
+    private HATEOASService $hateoasService;
 
-    public function __construct(ServicePatient $servicePatient)
+    public function __construct(ServicePatient $servicePatient, HATEOASService $hateoasService)
     {
         $this->servicePatient = $servicePatient;
+        $this->hateoasService = $hateoasService;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -28,7 +31,7 @@ class GetPatientAction
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
-        $response->getBody()->write(json_encode([
+        $responseData = [
             'id' => $patient->getId(),
             'nom' => $patient->getNom(),
             'prenom' => $patient->getPrenom(),
@@ -37,8 +40,11 @@ class GetPatientAction
             'codePostal' => $patient->getCodePostal(),
             'ville' => $patient->getVille(),
             'email' => $patient->getEmail(),
-            'telephone' => $patient->getTelephone()
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+            'telephone' => $patient->getTelephone(),
+            '_links' => $this->hateoasService->getPatientLinks($patientId)
+        ];
+        
+        $response->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }

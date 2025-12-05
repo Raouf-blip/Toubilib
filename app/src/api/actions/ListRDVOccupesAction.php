@@ -4,16 +4,19 @@ namespace toubilib\api\actions;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use toubilib\core\application\usecases\ServiceRDVInterface;
+use toubilib\core\application\services\HATEOASService;
 use DateTime;
 use Exception;
 
 class ListRDVOccupesAction
 {
     private ServiceRDVInterface $serviceRDV;
+    private HATEOASService $hateoasService;
 
-    public function __construct(ServiceRDVInterface $serviceRDV)
+    public function __construct(ServiceRDVInterface $serviceRDV, HATEOASService $hateoasService)
     {
         $this->serviceRDV = $serviceRDV;
+        $this->hateoasService = $hateoasService;
     }
 
     public function __invoke(Request $request, Response $response, array $args): Response
@@ -64,7 +67,12 @@ class ListRDVOccupesAction
             'dateCreation' => $rdv->dateCreation
         ], $creneaux);
 
-        $response->getBody()->write(json_encode($result, JSON_UNESCAPED_UNICODE));
-        return $response->withHeader('Content-Type', 'application/json');
+        $responseData = [
+            'creneaux' => $result,
+            '_links' => $this->hateoasService->getPraticienLinks($praticienId)
+        ];
+
+        $response->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE));
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 }

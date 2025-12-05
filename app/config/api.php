@@ -59,7 +59,7 @@ return [
 
     // Actions RDV
     ListRDVOccupesAction::class => fn(ContainerInterface $c) =>
-        new ListRDVOccupesAction($c->get(ServiceRDVInterface::class)),
+        new ListRDVOccupesAction($c->get(ServiceRDVInterface::class), $c->get(HATEOASService::class)),
 
     GetRDVAction::class => fn(ContainerInterface $c) =>
         new GetRDVAction($c->get(ServiceRDVInterface::class), $c->get(HATEOASService::class)),
@@ -81,11 +81,11 @@ return [
         new RecherchePraticiensSpeVilleAction($c->get(ServicePraticienInterface::class), $c->get(HATEOASService::class)),
 
     AgendaPraticienAction::class => fn(ContainerInterface $c) =>
-        new AgendaPraticienAction($c->get(ServiceRDVInterface::class)),
+        new AgendaPraticienAction($c->get(ServiceRDVInterface::class), $c->get(HATEOASService::class)),
 
     // Actions patients
     GetPatientAction::class => fn(ContainerInterface $c) =>
-        new GetPatientAction($c->get(ServicePatientInterface::class)),
+        new GetPatientAction($c->get(ServicePatientInterface::class), $c->get(HATEOASService::class)),
 
     // Feature 12: Inscription patient
     RegisterPatientAction::class => fn(ContainerInterface $c) =>

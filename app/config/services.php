@@ -152,15 +152,15 @@ return [
     ServiceRDV::class => fn(ContainerInterface $c) => $c->get(ServiceRDVInterface::class),
 
     AnnulerRDVAction::class => function (ContainerInterface $c) {
-        return new AnnulerRDVAction($c->get(ServiceRDVInterface::class));
+        return new AnnulerRDVAction($c->get(ServiceRDVInterface::class), $c->get(HATEOASService::class));
     },
 
     MarquerRDVHonoreAction::class => function (ContainerInterface $c) {
-        return new MarquerRDVHonoreAction($c->get(ServiceRDVInterface::class));
+        return new MarquerRDVHonoreAction($c->get(ServiceRDVInterface::class), $c->get(HATEOASService::class));
     },
 
     MarquerRDVNonHonoreAction::class => function (ContainerInterface $c) {
-        return new MarquerRDVNonHonoreAction($c->get(ServiceRDVInterface::class));
+        return new MarquerRDVNonHonoreAction($c->get(ServiceRDVInterface::class), $c->get(HATEOASService::class));
     },
 
     AuthLoginAction::class =>
