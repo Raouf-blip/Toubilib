@@ -38,9 +38,10 @@ class DeleteIndisponibiliteAction
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(204);
         } catch (\Exception $e) {
-            $statusCode = 400;
-            if (strpos($e->getMessage(), 'inexistant') !== false) {
-                $statusCode = 404;
+            $statusCode = 404; // Par défaut 404 pour DELETE (ressource non trouvée)
+            // Si le message indique une erreur de validation ou autre erreur métier, utiliser 400
+            if (strpos($e->getMessage(), 'inexistant') === false) {
+                $statusCode = 400;
             }
 
             $response->getBody()->write(json_encode([
