@@ -34,7 +34,10 @@ class ListPraticiensAction
         }
 
         $responseData = [
-            'praticiens' => $data,
+            'status' => 'success',
+            'data' => [
+                'praticiens' => $data
+            ],
             '_links' => $this->hateoasService->getPraticiensListLinks()
         ];
 

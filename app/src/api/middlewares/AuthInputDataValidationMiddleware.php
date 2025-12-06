@@ -27,7 +27,10 @@ class AuthInputDataValidationMiddleware
         //Capture les erreurs
         if (!empty($errors)) {
             $res = new SlimResponse();
-            $res->getBody()->write(json_encode(['errors' => $errors], JSON_UNESCAPED_UNICODE));
+            $res->getBody()->write(json_encode([
+                'status' => 'error',
+                'errors' => $errors
+            ], JSON_UNESCAPED_UNICODE));
             return $res->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 
@@ -39,7 +42,10 @@ class AuthInputDataValidationMiddleware
         //Capture les erreurs après validation email
         if (!empty($errors)) {
             $res = new SlimResponse();
-            $res->getBody()->write(json_encode(['errors' => $errors], JSON_UNESCAPED_UNICODE));
+            $res->getBody()->write(json_encode([
+                'status' => 'error',
+                'errors' => $errors
+            ], JSON_UNESCAPED_UNICODE));
             return $res->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 

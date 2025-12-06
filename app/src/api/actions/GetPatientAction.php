@@ -21,26 +21,35 @@ class GetPatientAction
     {
         $patientId = $args['id'] ?? null;
         if (!$patientId) {
-            $response->getBody()->write(json_encode(['error' => 'ID manquant'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'ID manquant'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         $patient = $this->servicePatient->consulterPatient($patientId);
         if (!$patient) {
-            $response->getBody()->write(json_encode(['error' => 'Patient non trouvé'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'Patient non trouvé'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
         $responseData = [
-            'id' => $patient->getId(),
-            'nom' => $patient->getNom(),
-            'prenom' => $patient->getPrenom(),
-            'dateNaissance' => $patient->getDateNaissance()?->format('Y-m-d'),
-            'adresse' => $patient->getAdresse(),
-            'codePostal' => $patient->getCodePostal(),
-            'ville' => $patient->getVille(),
-            'email' => $patient->getEmail(),
-            'telephone' => $patient->getTelephone(),
+            'status' => 'success',
+            'data' => [
+                'id' => $patient->getId(),
+                'nom' => $patient->getNom(),
+                'prenom' => $patient->getPrenom(),
+                'dateNaissance' => $patient->getDateNaissance()?->format('Y-m-d'),
+                'adresse' => $patient->getAdresse(),
+                'codePostal' => $patient->getCodePostal(),
+                'ville' => $patient->getVille(),
+                'email' => $patient->getEmail(),
+                'telephone' => $patient->getTelephone()
+            ],
             '_links' => $this->hateoasService->getPatientLinks($patientId)
         ];
         

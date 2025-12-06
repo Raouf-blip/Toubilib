@@ -35,7 +35,10 @@ class AuthZRDVMiddleware implements MiddlewareInterface
 
         if (!$user || !$rdvId) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Paramètres manquants'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'Paramètres manquants'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
@@ -44,7 +47,10 @@ class AuthZRDVMiddleware implements MiddlewareInterface
             $rdv = $this->serviceRDV->consulterRdv($rdvId);
             if (!$rdv) {
                 $response = new \Slim\Psr7\Response();
-                $response->getBody()->write(json_encode(['error' => 'RDV non trouvé'], JSON_UNESCAPED_UNICODE));
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'RDV non trouvé'
+                ], JSON_UNESCAPED_UNICODE));
                 return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
             }
 
@@ -54,14 +60,20 @@ class AuthZRDVMiddleware implements MiddlewareInterface
 
             if (!$isPatient && !$isPraticien) {
                 $response = new \Slim\Psr7\Response();
-                $response->getBody()->write(json_encode(['error' => 'Accès non autorisé à ce RDV'], JSON_UNESCAPED_UNICODE));
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'Accès non autorisé à ce RDV'
+                ], JSON_UNESCAPED_UNICODE));
                 return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
             }
 
             return $handler->handle($request);
         } catch (\Exception $e) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Erreur lors de la vérification des permissions'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'Erreur lors de la vérification des permissions'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(500)->withHeader('Content-Type', 'application/json');
         }
     }

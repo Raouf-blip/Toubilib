@@ -36,8 +36,8 @@ class CreateIndisponibiliteAction
 
             $responseData = [
                 'status' => 'success',
-                'message' => 'Indisponibilité créée avec succès',
                 'data' => [
+                    'message' => 'Indisponibilité créée avec succès',
                     'id' => $indisponibiliteDTO->id,
                     'praticienId' => $indisponibiliteDTO->praticienId,
                     'dateDebut' => $indisponibiliteDTO->dateDebut,

@@ -22,21 +22,30 @@ class AnnulerRDVAction
         $rdvId = $args['id'] ?? null;
 
         if (!$rdvId) {
-            $response->getBody()->write(json_encode(['error' => 'ID manquant'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'ID manquant'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         try {
             $this->serviceRDV->annulerRendezVous($rdvId);
         } catch (\Exception $e) {
-            $response->getBody()->write(json_encode(['error' => $e->getMessage()], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         // Récupérer le RDV pour obtenir les IDs nécessaires aux liens supplémentaires
         // Si cette récupération échoue, on retourne quand même une réponse de succès avec les liens de base
         $responseData = [
-            'message' => 'Rendez-vous annulé',
+            'status' => 'success',
+            'data' => [
+                'message' => 'Rendez-vous annulé'
+            ],
             '_links' => $this->hateoasService->getRDVLinks($rdvId)
         ];
         
@@ -60,6 +69,6 @@ class AnnulerRDVAction
         }
         
         $response->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE));
-        return $response->withStatus(202)->withHeader('Content-Type', 'application/json');
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     }
 }

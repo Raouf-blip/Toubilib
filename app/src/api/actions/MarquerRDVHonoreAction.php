@@ -22,7 +22,10 @@ class MarquerRDVHonoreAction
         $rdvId = $args['id'] ?? null;
 
         if (!$rdvId) {
-            $response->getBody()->write(json_encode(['error' => 'ID manquant'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'ID manquant'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
@@ -37,12 +40,18 @@ class MarquerRDVHonoreAction
                 $status = 404;
             }
             
-            $response->getBody()->write(json_encode(['error' => $msg], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => $msg
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
         $responseData = [
-            'message' => 'Rendez-vous marqué comme honoré',
+            'status' => 'success',
+            'data' => [
+                'message' => 'Rendez-vous marqué comme honoré'
+            ],
             '_links' => $this->hateoasService->getRDVLinks($rdvId)
         ];
         

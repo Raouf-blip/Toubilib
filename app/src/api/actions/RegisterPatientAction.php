@@ -35,8 +35,8 @@ class RegisterPatientAction
 
             $responseData = [
                 'status' => 'success',
-                'message' => 'Patient inscrit avec succès',
                 'data' => [
+                    'message' => 'Patient inscrit avec succès',
                     'id' => $authDTO->id,
                     'email' => $authDTO->email,
                     'nom' => $dto->nom,

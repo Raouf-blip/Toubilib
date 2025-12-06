@@ -21,7 +21,10 @@ class AgendaPraticienAction
     {
         $praticienId = $args['id'] ?? null;
         if (!$praticienId) {
-            $response->getBody()->write(json_encode(['error' => 'ID du praticien manquant'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'ID du praticien manquant'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
@@ -33,19 +36,28 @@ class AgendaPraticienAction
             
             // Validation : date de début doit être antérieure à la date de fin si les deux sont fournies
             if ($dateDebut && $dateFin && $dateDebut > $dateFin) {
-                $response->getBody()->write(json_encode(['error' => 'Date de début doit être antérieure à la date de fin'], JSON_UNESCAPED_UNICODE));
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'Date de début doit être antérieure à la date de fin'
+                ], JSON_UNESCAPED_UNICODE));
                 return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
             }
             
         } catch (\Exception $e) {
-            $response->getBody()->write(json_encode(['error' => 'Format de date invalide (YYYY-MM-DD)'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'Format de date invalide (YYYY-MM-DD)'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         $agenda = $this->serviceRDV->getAgendaPraticien($praticienId, $dateDebut, $dateFin);
         
         $responseData = [
-            'agenda' => $agenda,
+            'status' => 'success',
+            'data' => [
+                'agenda' => $agenda
+            ],
             '_links' => $this->hateoasService->getAgendaLinks($praticienId)
         ];
 

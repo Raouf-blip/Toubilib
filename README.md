@@ -49,7 +49,7 @@ L'API répondra avec la liste de tous les endpoints disponibles.
 TOKEN=$(curl -X POST http://localhost:6080/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"Denis.Teixeira@hotmail.fr","mdp":"test"}' \
-  -s | jq -r '.token')
+  -s | jq -r '.data.token')
 
 # 2. Lister les praticiens
 curl -X GET http://localhost:6080/praticiens
@@ -71,6 +71,135 @@ curl -X POST http://localhost:6080/rdvs \
     "duree":30,
     "motifVisite":"radiologie"
   }'
+```
+
+## Structure des Réponses JSON
+
+Toutes les réponses de l'API suivent une structure standardisée pour garantir la cohérence et faciliter l'intégration.
+
+### Réponses de Succès
+
+Toutes les réponses de succès suivent le pattern suivant :
+
+```json
+{
+  "status": "success",
+  "data": {
+    // Données spécifiques à l'endpoint
+  },
+  "_links": {
+    // Liens HATEOAS
+  }
+}
+```
+
+**Exemples :**
+
+- **GET /praticiens/{id}** :
+
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "uuid",
+    "nom": "Dupont",
+    "prenom": "Jean",
+    "specialite": "radiologie",
+    // ... autres champs
+  },
+  "_links": { ... }
+}
+```
+
+- **GET /praticiens** :
+
+```json
+{
+  "status": "success",
+  "data": {
+    "praticiens": [
+      {
+        "nom": "Dupont",
+        "prenom": "Jean",
+        // ...
+      }
+    ]
+  },
+  "_links": { ... }
+}
+```
+
+- **POST /auth/login** :
+
+```json
+{
+  "status": "success",
+  "data": {
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+    "user": {
+      "id": "uuid",
+      "email": "user@example.com",
+      "role": "1 - Patient"
+    },
+    "expires_in": 3600
+  },
+  "_links": { ... }
+}
+```
+
+### Réponses d'Erreur
+
+Toutes les erreurs suivent le pattern suivant :
+
+```json
+{
+  "status": "error",
+  "message": "Description de l'erreur"
+}
+```
+
+Pour les erreurs de validation (400), un tableau `errors` peut être inclus :
+
+```json
+{
+  "status": "error",
+  "errors": [
+    "Le champ 'email' est requis",
+    "L'email doit être au format valide"
+  ]
+}
+```
+
+**Codes de statut HTTP :**
+
+- `200 OK` : Succès (GET, PATCH)
+- `201 Created` : Ressource créée avec succès (POST)
+- `204 No Content` : Succès sans contenu (DELETE)
+- `400 Bad Request` : Erreur de validation ou requête invalide
+- `401 Unauthorized` : Authentification requise ou token invalide
+- `403 Forbidden` : Accès non autorisé
+- `404 Not Found` : Ressource non trouvée
+- `409 Conflict` : Conflit (ex: créneau déjà occupé)
+- `500 Internal Server Error` : Erreur serveur
+
+### Liens HATEOAS
+
+Toutes les réponses incluent des liens HATEOAS dans le champ `_links` pour faciliter la navigation dans l'API :
+
+```json
+{
+  "_links": {
+    "self": {
+      "href": "http://localhost:6080/praticiens/{id}",
+      "method": "GET"
+    },
+    "agenda": {
+      "href": "http://localhost:6080/praticiens/{id}/agenda",
+      "method": "GET",
+      "description": "Consulter l'agenda du praticien"
+    }
+  }
+}
 ```
 
 ## Fonctionnalités Implémentées
@@ -117,16 +246,6 @@ app/
 Un service Adminer est disponible sur `http://localhost:8080` pour gérer les bases de données.
 
 ## Tableau de Bord
-
-### Fonctionnalités Implémentées
-
-- Architecture hexagonale + inversion de dépendances
-- API RESTful (URIs, méthodes HTTP, status codes, JSON, HATEOAS)
-- Authentification JWT + middlewares d'autorisation
-- Validation des données + headers CORS
-- Bases de données distinctes + Docker
-- Fonctionnalités minimales (1-8) toutes implémentées
-- Fonctionnalités avancées (9-13) toutes implémentées
 
 ### Réalisations par Membre du Groupe
 

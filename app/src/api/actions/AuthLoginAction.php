@@ -55,19 +55,22 @@ class AuthLoginAction
             
             $token = $this->jwtService->generateToken($tokenPayload);
 
-                $out = [
+            $responseData = [
+                'status' => 'success',
+                'data' => [
                     'token' => $token,
                     'user' => [
                         'id' => $auth->id,
                         'email' => $auth->email,
                         'role' => $auth->role . ' - ' . $nomRole
                     ],
-                    'expires_in' => 3600, // 1 heure en secondes
-                    '_links' => $this->hateoasService->getAuthLinks()
-                ];
+                    'expires_in' => 3600 // 1 heure en secondes
+                ],
+                '_links' => $this->hateoasService->getAuthLinks()
+            ];
 
             $res = new SlimResponse();
-            $res->getBody()->write(json_encode($out, JSON_UNESCAPED_UNICODE));
+            $res->getBody()->write(json_encode($responseData, JSON_UNESCAPED_UNICODE));
             return $res->withHeader('Content-Type', 'application/json')->withStatus(200);
         } catch (\Exception $e) {
             $status = 500; // Erreur serveur par défaut
@@ -89,7 +92,10 @@ class AuthLoginAction
     private function createErrorResponse(string $message, int $status = 500): Response
     {
         $res = new SlimResponse();
-        $res->getBody()->write(json_encode(['error' => $message], JSON_UNESCAPED_UNICODE));
+        $res->getBody()->write(json_encode([
+            'status' => 'error',
+            'message' => $message
+        ], JSON_UNESCAPED_UNICODE));
         return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
     }
 }

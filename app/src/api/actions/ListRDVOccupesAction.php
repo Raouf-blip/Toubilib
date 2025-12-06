@@ -27,7 +27,10 @@ class ListRDVOccupesAction
         $dateFin = $query['dateFin'] ?? null;
 
         if (!$praticienId || !$dateDebut || !$dateFin) {
-            $response->getBody()->write(json_encode(['error' => 'Paramètres manquants'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'Paramètres manquants'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
@@ -37,19 +40,28 @@ class ListRDVOccupesAction
             
             // Validation : date de début doit être antérieure à la date de fin
             if ($debut > $fin) {
-                $response->getBody()->write(json_encode(['error' => 'Date de début doit être antérieure à la date de fin'], JSON_UNESCAPED_UNICODE));
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'Date de début doit être antérieure à la date de fin'
+                ], JSON_UNESCAPED_UNICODE));
                 return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
             }
             
             // Limiter la période à 1 an maximum pour éviter les surcharges
             $diff = $fin->diff($debut);
             if ($diff->days > 365) {
-                $response->getBody()->write(json_encode(['error' => 'Période maximale de 1 an'], JSON_UNESCAPED_UNICODE));
+                $response->getBody()->write(json_encode([
+                    'status' => 'error',
+                    'message' => 'Période maximale de 1 an'
+                ], JSON_UNESCAPED_UNICODE));
                 return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
             }
             
         } catch (Exception $e) {
-            $response->getBody()->write(json_encode(['error' => 'Format de date invalide (YYYY-MM-DD)'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'Format de date invalide (YYYY-MM-DD)'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
@@ -68,7 +80,10 @@ class ListRDVOccupesAction
         ], $creneaux);
 
         $responseData = [
-            'creneaux' => $result,
+            'status' => 'success',
+            'data' => [
+                'creneaux' => $result
+            ],
             '_links' => $this->hateoasService->getPraticienLinks($praticienId)
         ];
 

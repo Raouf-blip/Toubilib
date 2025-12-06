@@ -41,7 +41,10 @@ class RDVInputDataValidationMiddleware
 
         if (!empty($errors)) {
             $res = new SlimResponse();
-            $res->getBody()->write(json_encode(['errors' => $errors], JSON_UNESCAPED_UNICODE));
+            $res->getBody()->write(json_encode([
+                'status' => 'error',
+                'errors' => $errors
+            ], JSON_UNESCAPED_UNICODE));
             return $res->withHeader('Content-Type', 'application/json')->withStatus(400);
         }
 

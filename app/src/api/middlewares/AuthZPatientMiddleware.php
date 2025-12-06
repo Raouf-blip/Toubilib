@@ -14,7 +14,10 @@ class AuthZPatientMiddleware implements MiddlewareInterface
         
         if (!$user || $user['role'] !== 1) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Accès réservé aux patients'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'Accès réservé aux patients'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
         }
 
@@ -30,7 +33,10 @@ class AuthZPatientMiddleware implements MiddlewareInterface
                 // Vérifier que le patient authentifié correspond au patient demandé
                 if ($user['id'] !== $patientId) {
                     $response = new \Slim\Psr7\Response();
-                    $response->getBody()->write(json_encode(['error' => 'Accès non autorisé : vous ne pouvez accéder qu\'à vos propres données'], JSON_UNESCAPED_UNICODE));
+                    $response->getBody()->write(json_encode([
+                        'status' => 'error',
+                        'message' => 'Accès non autorisé : vous ne pouvez accéder qu\'à vos propres données'
+                    ], JSON_UNESCAPED_UNICODE));
                     return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
                 }
                 break;

@@ -27,20 +27,29 @@ class AuthZPraticienIndisponibiliteMiddleware implements MiddlewareInterface
 
         if (!$user || $user['role'] !== 10) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Accès réservé aux praticiens'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'Accès réservé aux praticiens'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
         }
 
         if (!$praticienId) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'ID praticien manquant'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'ID praticien manquant'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         // Vérifier que le praticien authentifié est le praticien concerné
         if ($user['id'] !== $praticienId) {
             $response = new \Slim\Psr7\Response();
-            $response->getBody()->write(json_encode(['error' => 'Accès non autorisé : vous ne pouvez gérer que vos propres indisponibilités'], JSON_UNESCAPED_UNICODE));
+            $response->getBody()->write(json_encode([
+                'status' => 'error',
+                'message' => 'Accès non autorisé : vous ne pouvez gérer que vos propres indisponibilités'
+            ], JSON_UNESCAPED_UNICODE));
             return $response->withStatus(403)->withHeader('Content-Type', 'application/json');
         }
 
